@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AmmaGPT — The Desi Mom Anti-Procrastination Enforcer</title>
+  <title>Gemini Maa — AI Desi Mom Anti-Procrastination Enforcer</title>
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
@@ -22,7 +22,6 @@
       src: url('./Outfit-Bold.ttf') format('truetype');
       font-weight: 700;
     }
-
     body {
       background-color: #FBF8F3;
       color: #231F20;
@@ -35,7 +34,13 @@
       font-family: 'JetBrains Mono', monospace;
     }
 
-    /* Screen shake when Amma gets angry */
+    /* Webcam video styling */
+    #webcamFeed {
+      transform: scaleX(-1); /* mirror */
+      object-fit: cover;
+    }
+
+    /* Screen shake when Gemini Maa gets angry */
     @keyframes screenShake {
       0%, 100% { transform: translateX(0); }
       20% { transform: translateX(-8px) rotate(-1deg); }
@@ -62,210 +67,212 @@
 
   <!-- TOP APP BAR -->
   <header class="bg-white/90 backdrop-blur-md border-b border-[#EFE8DE] sticky top-0 z-40">
-    <div class="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
+    <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
       <div class="flex items-center gap-3">
-        <div id="momAvatarMini" class="w-10 h-10 rounded-2xl bg-rose-50 border border-rose-200 flex items-center justify-center text-2xl shadow-sm transition-transform duration-300">
-          👩‍👧
+        <div id="momAvatarMini" class="w-10 h-10 rounded-2xl bg-rose-50 border border-rose-200 flex items-center justify-center text-2xl shadow-sm transition-transform">
+          👵
         </div>
         <div>
           <div class="flex items-center gap-2">
-            <span class="font-heading text-lg font-black text-[#231F20] tracking-tight">AmmaGPT</span>
-            <span id="momMoodBadge" class="text-[10px] font-mono-code uppercase px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-bold border border-emerald-200">
-              🟢 Mood: Shantam (Calm)
+            <span class="font-heading text-lg font-black text-[#231F20] tracking-tight">Gemini Maa</span>
+            <span class="text-[10px] uppercase font-mono-code px-2 py-0.5 rounded-full bg-rose-100 text-rose-800 font-bold border border-rose-200">
+              AI Mom Surveillance
+            </span>
+            <span id="camStatusBadge" class="text-[10px] font-mono-code uppercase px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-bold border border-emerald-200 flex items-center gap-1">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-ping"></span>
+              Maa Eye: ON
             </span>
           </div>
-          <p class="text-[11px] text-[#786C5E] font-medium">Desi Mom AI Anti-Procrastination & Distraction Firewall</p>
+          <p class="text-[11px] text-[#786C5E] font-medium">Smart AI Roadmap Planner + Live Webcam Attention Monitor</p>
         </div>
       </div>
 
       <div class="flex items-center gap-2">
         <button onclick="testDistractionBlock('instagram.com')" class="text-xs px-3 py-1.5 rounded-full bg-red-100 hover:bg-red-200 border border-red-300 text-red-800 font-bold transition flex items-center gap-1 active:scale-95">
-          <span>🚫</span> Test Site Block
+          <span>🚫</span> Test Distraction
         </button>
         <button onclick="triggerMomCall()" class="text-xs px-3.5 py-1.5 rounded-full bg-rose-600 hover:bg-rose-700 text-white font-extrabold transition shadow-sm flex items-center gap-1.5 active:scale-95">
-          <span>📞</span> Amma Calling!
+          <span>📞</span> Gemini Maa Call!
         </button>
       </div>
     </div>
   </header>
 
   <!-- MAIN WRAPPER -->
-  <main class="max-w-5xl mx-auto px-4 pt-6">
+  <main class="max-w-6xl mx-auto px-4 pt-6">
 
-    <!-- AMMA LIVE DASHBOARD / MOOD HERO CARD -->
-    <section id="ammaHeroCard" class="mb-8 rounded-3xl p-6 sm:p-8 bg-gradient-to-br from-[#FFF8F6] via-[#FFF3EF] to-[#FFEBE5] border-2 border-rose-200 shadow-sm relative overflow-hidden transition-all duration-500">
-      <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
-        <div class="flex items-start gap-4">
-          <!-- Big Interactive Mom Avatar -->
-          <div id="bigMomAvatar" class="w-20 h-20 sm:w-24 sm:h-24 rounded-3xl bg-white border-2 border-rose-200 flex flex-col items-center justify-center text-4xl sm:text-5xl shadow-md shrink-0 transition-transform">
-            👵
-          </div>
-
-          <div>
-            <div class="inline-flex items-center gap-2 text-xs font-mono-code uppercase tracking-wider text-rose-700 font-bold mb-1">
-              <span class="w-2 h-2 rounded-full bg-rose-600 animate-ping"></span>
-              Live Mom Surveillance Engine
-            </div>
-            <h1 id="momDialectTitle" class="font-heading text-2xl sm:text-3xl font-extrabold text-[#231F20]">
-              "Rey! Phone pakkana petti pani cheyyi ra!"
-            </h1>
-            <p id="momLiveScold" class="text-xs sm:text-sm text-[#635547] mt-1.5 max-w-xl font-medium leading-relaxed bg-white/70 p-3 rounded-2xl border border-rose-100">
-              "Poddununchi phone chusthune unnav... Sharma gari abbayi ippatike 3 projects aipogotti job lo join ayyadu, nuvvu inka bed meedha dhorluthunnav!"
-            </p>
-
-            <!-- STATS ROW -->
-            <div class="flex flex-wrap items-center gap-2.5 mt-4 text-xs font-medium">
-              <div class="bg-white px-3 py-1.5 rounded-xl border border-rose-200 flex items-center gap-1.5">
-                <span class="text-zinc-500">Pending Tasks:</span>
-                <span id="pendingTaskCount" class="font-mono-code font-bold text-rose-700">3</span>
-              </div>
-              <div class="bg-white px-3 py-1.5 rounded-xl border border-rose-200 flex items-center gap-1.5">
-                <span class="text-zinc-500">Amma Anger Level:</span>
-                <span id="angerPercentage" class="font-mono-code font-bold text-amber-700">25% (Warning)</span>
-              </div>
-              <div class="bg-white px-3 py-1.5 rounded-xl border border-rose-200 flex items-center gap-1.5">
-                <span class="text-zinc-500">Flying Chappal Risk:</span>
-                <span id="chappalRisk" class="font-bold text-emerald-700">🟢 Low</span>
-              </div>
-            </div>
-          </div>
+    <!-- STEP 1: ONBOARDING INTENT ROADMAP GENERATOR (USER ASKED) -->
+    <section id="onboardingSection" class="mb-8 rounded-3xl p-6 sm:p-8 bg-gradient-to-br from-[#FFF9F5] via-[#FFF3EC] to-[#FFEBE1] border-2 border-rose-200 shadow-sm relative overflow-hidden">
+      <div class="max-w-3xl">
+        <div class="inline-flex items-center gap-2 text-xs font-mono-code uppercase tracking-wider text-rose-700 font-bold mb-2">
+          <span>👵</span> Gemini Maa Morning Audit
         </div>
+        <h1 class="font-heading text-2xl sm:text-3xl font-extrabold text-[#231F20]">
+          "Rey! Ivala emi panulu cheyali anukuntunnavo motham cheppu!"
+        </h1>
+        <p class="text-xs sm:text-sm text-[#635547] mt-1.5 font-medium leading-relaxed">
+          Nuvvu cheppina panulaki Gemini Maa oka structured <strong>Step-by-Step AI Roadmap</strong> create chesthadi. Time ki complete cheyakapothe or camera lo phone chusthe seedha Telugu lo thidathadi!
+        </p>
 
-        <!-- AMMA QUICK ACTIONS -->
-        <div class="flex flex-col gap-2 shrink-0">
-          <button onclick="aiBreakdownTask()" class="px-5 py-3 rounded-2xl bg-rose-600 hover:bg-rose-700 text-white font-extrabold text-xs shadow-md transition flex items-center justify-center gap-2 active:scale-95">
-            <span>✨</span> AI Task Decomposition (Cheppuko)
-          </button>
-          <button onclick="calmAmmaDown()" class="px-4 py-2.5 rounded-2xl bg-white hover:bg-rose-50 border border-rose-200 text-xs font-bold text-[#786C5E] transition flex items-center justify-center gap-1.5">
-            <span>🙏</span> "Amma 10 mins lo aipothundi" (Beg for time)
-          </button>
-        </div>
+        <!-- INPUT BOX -->
+        <form onsubmit="handleGenerateRoadmap(event)" class="mt-4 space-y-3">
+          <div class="flex flex-col sm:flex-row gap-2">
+            <input 
+              required 
+              id="rawUserPlanInput" 
+              type="text" 
+              placeholder="e.g. Hackathon project finish cheyyali, Resume update cheyyali, Math assignment complete chesi room clean cheyyali" 
+              class="flex-1 bg-white border border-[#EAE1D5] rounded-2xl px-4 py-3 text-xs sm:text-sm text-[#231F20] focus:outline-none focus:border-rose-500 font-medium shadow-2xs"
+            >
+            <button type="submit" id="genRoadmapBtn" class="px-6 py-3 rounded-2xl bg-rose-600 hover:bg-rose-700 text-white font-extrabold text-xs tracking-wide shadow-md transition active:scale-95 flex items-center justify-center gap-2 shrink-0">
+              <span>✨</span> Gemini Maa Roadmap Cheyyi!
+            </button>
+          </div>
+          <div class="flex flex-wrap items-center gap-2 text-[11px] text-[#8C7E70]">
+            <span class="font-bold text-rose-800">Quick Prompts:</span>
+            <button type="button" onclick="setQuickPrompt('Hackathon project video, GitHub push, resume update')" class="px-2.5 py-1 rounded-lg bg-white/80 border border-rose-200 hover:bg-white text-zinc-700 font-medium">💻 Hackathon Submission</button>
+            <button type="button" onclick="setQuickPrompt('Final exam preparation, 3 chapters revision, mock test')" class="px-2.5 py-1 rounded-lg bg-white/80 border border-rose-200 hover:bg-white text-zinc-700 font-medium">📚 Exam Preparation</button>
+            <button type="button" onclick="setQuickPrompt('Full stack web app build, portfolio deploy, laundry folding')" class="px-2.5 py-1 rounded-lg bg-white/80 border border-rose-200 hover:bg-white text-zinc-700 font-medium">🚀 Full-Day Productive</button>
+          </div>
+        </form>
       </div>
     </section>
 
-    <!-- TWO-COLUMN GRID: TASKS + DISTRACTION BLOCKER -->
+    <!-- STEP 2: DASHBOARD WITH WEBCAM & ROADMAP EXECUTION -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-      <!-- LEFT: TASKS & POMODORO (2 COLS) -->
+      <!-- LEFT 2 COLS: GENERATED AI ROADMAP + ACTIVE TIMELINE -->
       <div class="lg:col-span-2 space-y-6">
 
-        <!-- ADD TASK FORM -->
+        <!-- GEMINI MAA LIVE STATUS HERO -->
+        <div id="geminiMaaStatusHero" class="rounded-3xl p-6 bg-white border border-[#EFE8DE] shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div class="flex items-center gap-3">
+            <div id="bigMomEmoji" class="w-16 h-16 rounded-2xl bg-rose-50 border-2 border-rose-200 flex items-center justify-center text-4xl shadow-sm shrink-0">
+              👵
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <span id="momMoodText" class="text-xs font-mono-code font-bold uppercase text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
+                  Mood: Shantam (Monitoring)
+                </span>
+                <span id="angerLevelText" class="text-xs font-mono-code text-zinc-500 font-bold">Anger: 20%</span>
+              </div>
+              <h3 id="momLiveVoiceHeading" class="font-heading text-lg font-bold text-[#231F20] mt-1">
+                "Roadmap chusi step-by-step complete cheyyi naanna!"
+              </h3>
+            </div>
+          </div>
+          <button onclick="calmGeminiMaa()" class="px-4 py-2 rounded-xl bg-[#FAF7F2] hover:bg-rose-50 border border-[#EAE1D5] text-xs font-bold text-rose-800 transition shrink-0">
+            "Amma 5 mins lo chestha!" 🙏
+          </button>
+        </div>
+
+        <!-- AI ROADMAP TIMELINE CONTAINER -->
         <div class="bg-white rounded-3xl p-6 border border-[#EFE8DE] shadow-sm">
           <div class="flex items-center justify-between mb-4 pb-3 border-b border-[#F4EDE4]">
             <div>
-              <span class="text-[10px] font-mono-code uppercase font-bold text-rose-700 tracking-wider">Commitment to Amma</span>
-              <h2 class="font-heading text-lg font-bold text-[#231F20]">Ivala Chesi Teeralsina Panulu (Tasks)</h2>
+              <span class="text-[10px] font-mono-code uppercase font-bold text-rose-700 tracking-wider">Gemini Maa AI Blueprint</span>
+              <h2 class="font-heading text-lg font-bold text-[#231F20]">Ivala Nuvvu Finish Cheyalsina Roadmap Steps</h2>
             </div>
-            <span class="text-2xl">📋</span>
+            <span id="completedMilestones" class="text-xs font-mono-code font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-3 py-1 rounded-full">
+              0 / 4 Steps Done
+            </span>
           </div>
 
-          <form onsubmit="handleAddTask(event)" class="space-y-3">
-            <div class="flex flex-col sm:flex-row gap-2">
-              <input 
-                required 
-                id="taskTitle" 
-                type="text" 
-                placeholder="Emi cheyali? (e.g. Resume complete cheyyadam, Math assignment...)" 
-                class="flex-1 bg-[#FAF7F2] border border-[#EAE1D5] rounded-2xl px-4 py-2.5 text-xs text-[#231F20] focus:bg-white focus:outline-none focus:border-rose-500 font-medium"
-              >
-              <select id="taskDuration" class="bg-[#FAF7F2] border border-[#EAE1D5] rounded-2xl px-3 py-2.5 text-xs text-[#231F20] focus:outline-none font-semibold">
-                <option value="15">15 Mins (Fast)</option>
-                <option value="30" selected>30 Mins (Standard)</option>
-                <option value="60">1 Hour (Deep)</option>
-                <option value="120">2 Hours (Exam Mode)</option>
-              </select>
-              <button type="submit" class="px-5 py-2.5 rounded-2xl bg-zinc-950 hover:bg-zinc-800 text-white font-bold text-xs shadow-md transition active:scale-95 shrink-0">
-                + Amma ki Cheppu
-              </button>
-            </div>
-            <p class="text-[11px] text-[#A09384] italic">
-              💡 Tip: Task deadline daatithe Amma nunchi direct Telugu audio dialogue & screen lock osthadi!
-            </p>
-          </form>
-        </div>
-
-        <!-- TASK LIST -->
-        <div class="bg-white rounded-3xl p-6 border border-[#EFE8DE] shadow-sm">
-          <div class="flex items-center justify-between mb-4 pb-2 border-b border-[#F4EDE4]">
-            <h3 class="font-heading text-base font-bold text-[#231F20]">Active Task Radar</h3>
-            <span class="text-xs text-[#786C5E] font-medium" id="taskStatsPill">3 Tasks remaining</span>
-          </div>
-
-          <div id="tasksListContainer" class="space-y-3">
+          <!-- Dynamic Roadmap List -->
+          <div id="roadmapListContainer" class="space-y-3.5">
             <!-- Dynamically injected -->
           </div>
         </div>
 
       </div>
 
-      <!-- RIGHT COLUMN: DISTRACTION BLOCKER & SHARMA GARI ABBAYI COMPARATOR -->
+      <!-- RIGHT 1 COL: LIVE WEBCAM EYE + FIREWALL & SHARMA GARI ABBAYI -->
       <div class="space-y-6">
 
-        <!-- DISTRACTION SITE BLOCKER FIREWALL (USER ASKED) -->
-        <div class="bg-white rounded-3xl p-6 border border-[#EFE8DE] shadow-sm">
-          <div class="flex items-center justify-between mb-3">
+        <!-- WEBCAM LIVE MONITOR (USER ASKED: "webcam kuda on lone untadhi so checking laaga") -->
+        <div class="bg-white rounded-3xl p-5 border-2 border-rose-200 shadow-sm relative overflow-hidden">
+          <div class="flex items-center justify-between mb-2.5">
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-red-600 animate-ping"></span>
+              <h3 class="font-heading text-sm font-bold text-[#231F20]">Gemini Maa Live Eye 👁️</h3>
+            </div>
+            <span id="webcamIndicator" class="text-[10px] font-mono-code font-bold text-rose-700 bg-rose-50 px-2 py-0.5 rounded-full">
+              SURVEILLANCE ACTIVE
+            </span>
+          </div>
+
+          <!-- Video element -->
+          <div class="relative w-full h-44 rounded-2xl bg-zinc-900 overflow-hidden border border-zinc-200 shadow-inner flex items-center justify-center">
+            <video id="webcamFeed" autoplay playsinline muted class="w-full h-full object-cover"></video>
+            <div id="camFallback" class="absolute inset-0 flex flex-col items-center justify-center p-3 text-center bg-zinc-900 text-zinc-400 hidden">
+              <span class="text-3xl mb-1">📹</span>
+              <p class="text-xs font-bold text-zinc-300">Camera Permission Kavali</p>
+              <button onclick="startWebcam()" class="mt-2 px-3 py-1 rounded-lg bg-rose-600 text-white font-bold text-[10px]">
+                Camera On Cheyyi
+              </button>
+            </div>
+
+            <!-- Face Detection Overlay Box -->
+            <div id="faceScanBox" class="absolute inset-6 border-2 border-dashed border-emerald-400/80 rounded-xl pointer-events-none flex items-start justify-end p-2 transition-all">
+              <span class="text-[9px] font-mono-code font-bold bg-emerald-500 text-black px-1.5 py-0.5 rounded">
+                STUDYING ✓
+              </span>
+            </div>
+          </div>
+
+          <div class="mt-3 flex items-center justify-between text-xs">
+            <div class="text-[11px] text-zinc-500 font-medium">
+              Status: <span id="userAttentionState" class="font-bold text-emerald-700">Focused on Screen</span>
+            </div>
+            <button onclick="simulateSlacking()" class="text-[10px] font-bold text-rose-700 bg-rose-50 hover:bg-rose-100 border border-rose-200 px-2 py-1 rounded-lg transition">
+              Simulate Phone Scrolling 📱
+            </button>
+          </div>
+        </div>
+
+        <!-- DISTRACTION SITE BLOCKER FIREWALL -->
+        <div class="bg-white rounded-3xl p-5 border border-[#EFE8DE] shadow-sm">
+          <div class="flex items-center justify-between mb-2">
             <div>
               <span class="text-[10px] font-mono-code uppercase font-bold text-rose-700 tracking-wider">Mummy Firewall</span>
-              <h3 class="font-heading text-base font-bold text-[#231F20]">Distraction Site Blocker</h3>
+              <h3 class="font-heading text-sm font-bold text-[#231F20]">Distraction Site Blocker</h3>
             </div>
-            <span class="text-2xl">🛡️</span>
+            <span class="text-xl">🛡️</span>
           </div>
-          <p class="text-xs text-[#786C5E] mb-4">
-            Pani chesetappudu ee sites open chesthe Amma screen lock vesi thidathadi!
+          <p class="text-[11px] text-[#786C5E] mb-3 leading-relaxed">
+            Pani cheyakunda ee sites open chesthe Gemini Maa screen lock vesi thidathadi!
           </p>
 
-          <div class="space-y-2 mb-4" id="blockedSitesList">
+          <div class="space-y-1.5 mb-3" id="blockedSitesList">
             <!-- Injected -->
           </div>
 
-          <!-- Add new blocked site -->
-          <div class="flex gap-2">
+          <div class="flex gap-1.5">
             <input 
               id="newBlockedSite" 
               type="text" 
-              placeholder="e.g. twitter.com / netflix.com" 
-              class="flex-1 bg-[#FAF7F2] border border-[#EAE1D5] rounded-xl px-3 py-2 text-xs text-[#231F20] focus:outline-none"
+              placeholder="e.g. netflix.com" 
+              class="flex-1 bg-[#FAF7F2] border border-[#EAE1D5] rounded-xl px-2.5 py-1.5 text-xs text-[#231F20] focus:outline-none"
             >
-            <button onclick="addCustomBlockedSite()" class="px-3 py-2 rounded-xl bg-rose-100 hover:bg-rose-200 text-rose-800 font-bold text-xs transition">
+            <button onclick="addCustomBlockedSite()" class="px-2.5 py-1.5 rounded-xl bg-rose-100 hover:bg-rose-200 text-rose-800 font-bold text-xs transition">
               + Block
             </button>
           </div>
         </div>
 
-        <!-- "SHARMA GARI ABBAYI" GUILT-TRIP GENERATOR -->
-        <div class="bg-gradient-to-br from-[#FFFBF0] to-[#FFF6DC] border border-[#F2E5B8] rounded-3xl p-6 shadow-sm">
+        <!-- "SHARMA GARI ABBAYI" LIVE COMPARATOR -->
+        <div class="bg-gradient-to-br from-[#FFFBF0] to-[#FFF6DC] border border-[#F2E5B8] rounded-3xl p-5 shadow-sm">
           <div class="flex items-center gap-2 mb-2">
             <span class="text-xl">🏆</span>
-            <h3 class="font-heading text-base font-bold text-[#231F20]">"Sharma Gari Abbayi" Status</h3>
+            <h3 class="font-heading text-sm font-bold text-[#231F20]">"Sharma Gari Abbayi" Status</h3>
           </div>
-          <p class="text-xs text-[#635547] leading-relaxed mb-3">
-            Neighbour aunty abbayi em chesthunnado live update:
-          </p>
-          <div id="sharmaGariAbbayiFeed" class="bg-white/80 p-3.5 rounded-2xl border border-[#EBDCA8] text-xs font-semibold text-[#42382E] leading-relaxed">
+          <div id="sharmaGariAbbayiFeed" class="bg-white/80 p-3 rounded-xl border border-[#EBDCA8] text-xs font-semibold text-[#42382E] leading-relaxed">
             "Vadu early morning 5 AM ki lechi coding chesthunnadu, 35 LPA package kottadu... Nuvvu inka phone scroll chesthunnava?"
           </div>
-          <button onclick="refreshSharmaComparison()" class="mt-3 text-[11px] font-bold text-rose-700 hover:underline flex items-center gap-1">
+          <button onclick="refreshSharmaComparison()" class="mt-2.5 text-[11px] font-bold text-rose-700 hover:underline flex items-center gap-1">
             <span>🔄</span> Inko Comparison Thiduthu Cheppu
           </button>
-        </div>
-
-        <!-- SOUND BOARD: AMMA CLASSIC DIALOGUES -->
-        <div class="bg-white rounded-3xl p-6 border border-[#EFE8DE] shadow-sm">
-          <h3 class="font-heading text-sm font-bold text-[#231F20] mb-3">Amma Signature Scoldings 🗣️</h3>
-          <div class="space-y-2 text-xs">
-            <button onclick="playMomDialogue('phone')" class="w-full text-left p-2.5 rounded-xl bg-[#FAF7F2] hover:bg-rose-50 border border-[#EAE1D5] font-semibold text-[#42382E] transition flex items-center justify-between">
-              <span>"Annitiki aa phone ae karanam!"</span>
-              <span class="text-xs text-rose-600">🔊</span>
-            </button>
-            <button onclick="playMomDialogue('sharma')" class="w-full text-left p-2.5 rounded-xl bg-[#FAF7F2] hover:bg-rose-50 border border-[#EAE1D5] font-semibold text-[#42382E] transition flex items-center justify-between">
-              <span>"Sharma gari abbayi ni chusi nerchuko!"</span>
-              <span class="text-xs text-rose-600">🔊</span>
-            </button>
-            <button onclick="playMomDialogue('tini')" class="w-full text-left p-2.5 rounded-xl bg-[#FAF7F2] hover:bg-rose-50 border border-[#EAE1D5] font-semibold text-[#42382E] transition flex items-center justify-between">
-              <span>"Tini kurchodam thappa em cheyavu!"</span>
-              <span class="text-xs text-rose-600">🔊</span>
-            </button>
-          </div>
         </div>
 
       </div>
@@ -274,20 +281,20 @@
 
   </main>
 
-  <!-- POPUP: BLOCKED SITE / THEDA CHESINANDUKU SCREEN LOCK MODAL -->
+  <!-- SCREEN LOCK / SITE BLOCKED MODAL -->
   <div id="siteBlockedModal" class="fixed inset-0 bg-black/85 backdrop-blur-lg z-50 hidden flex items-center justify-center p-4">
     <div class="bg-white rounded-3xl p-7 max-w-md w-full shadow-2xl border-4 border-red-500 text-center relative animate-pulse">
       <div class="w-24 h-24 mx-auto rounded-full bg-red-100 border-2 border-red-300 flex items-center justify-center text-5xl mb-3">
         🩴
       </div>
       <span class="text-[10px] font-mono-code uppercase font-bold text-red-600 tracking-wider bg-red-50 px-3 py-1 rounded-full border border-red-200">
-        AMMA SITE BLOCKED FIREWALL
+        GEMINI MAA SURVEILLANCE BREACH
       </span>
       <h3 class="font-heading text-2xl font-black text-red-700 mt-2">
         "Orey! <span id="blockedSiteDomain">Instagram</span> enduku open chesav?!"
       </h3>
       <p id="blockedSiteScold" class="text-xs text-zinc-700 my-3 font-semibold leading-relaxed bg-red-50 p-3 rounded-2xl border border-red-200">
-        "Pani aipokunda reels chusthava?! Ippudu phone laakkoni switch off chesthe telusthundi! Ventane poyi pending tasks aipogottu!"
+        "Roadmap lo inka steps migili unte reels chusthava?! Ippudu phone laakkoni switch off chesthe telusthundi! Ventane poyi pending step aipogottu!"
       </p>
 
       <div class="space-y-2 pt-2">
@@ -308,26 +315,28 @@
   <!-- SCRIPT ENGINE -->
   <script>
     // 1. Initial State
-    let tasks = [
-      { id: 1, title: "Google Cloud Hackathon Submission Ready Cheyyadam", duration: 30, remaining: 18, status: "pending" },
-      { id: 2, title: "Resume & Portfolio Project Links Update", duration: 45, remaining: 40, status: "pending" },
-      { id: 3, title: "Room Clean Cheyyadam & Laundry Madathapettadam", duration: 20, remaining: 20, status: "pending" }
+    let roadmap = [
+      { id: 1, phase: "Phase 1: Foundation", title: "Project Codebase & Architecture Finalization", time: "30 Mins", status: "pending", penaltyCount: 0 },
+      { id: 2, phase: "Phase 2: Core Feature", title: "Complete Key Video/Web App Submission Files", time: "45 Mins", status: "pending", penaltyCount: 0 },
+      { id: 3, phase: "Phase 3: Verification", title: "GitHub Commit, Remote Push & Verification", time: "20 Mins", status: "pending", penaltyCount: 0 },
+      { id: 4, phase: "Phase 4: Presentation", title: "Judges Pitch & Demo Walkthrough Ready", time: "15 Mins", status: "pending", penaltyCount: 0 }
     ];
 
     let blockedSites = [
-      { domain: "instagram.com", name: "Instagram Reels", blockedCount: 14 },
-      { domain: "youtube.com", name: "YouTube Shorts", blockedCount: 9 },
-      { domain: "twitter.com", name: "X / Twitter", blockedCount: 6 },
-      { domain: "reddit.com", name: "Reddit Doomscrolling", blockedCount: 4 }
+      { domain: "instagram.com", name: "Instagram Reels" },
+      { domain: "youtube.com", name: "YouTube Shorts" },
+      { domain: "twitter.com", name: "X / Twitter" },
+      { domain: "reddit.com", name: "Reddit Doomscrolling" }
     ];
 
-    let angerLevel = 35; // 0 to 100
+    let angerLevel = 20;
 
     const teluguMomScolds = [
       "Rey! Phone pakkana petti pani cheyyi ra! Sharma gari abbayi ippatike 3 offers kottadu!",
       "Ilaage unte repu podduna em chesthav ra? Chuttu pakkala vallu em anukuntaru?!",
+      "Camera lo choosthune unna... Nuvvu screen meeda chudatledu, pakkaki thirigi nidrapothunnav!",
       "Podduna 9 varaku padukuntav, night 2 varaku phone lo em peekuthunnav ra?!",
-      "Ee roju ee tasks aipokapothe intlo nunchi bayatiki pampistha, choosthu undu!",
+      "Ee roju ee roadmap aipokapothe intlo nunchi bayatiki pampistha, choosthu undu!",
       "Annitiki aa phone ae karanam! Daanni nillallo munchithe gaani buddhi raadhu!",
       "Chappal theestha inka! Panulu eppudu aipothayi ani adigithe inka 5 mins antav!"
     ];
@@ -340,135 +349,215 @@
     ];
 
     // Speech Synthesis for Telugu Mom Accent Voice
-    function speakTeluguMom(text) {
+    function speakGeminiMaa(text) {
       if ('speechSynthesis' in window) {
         window.speechSynthesis.cancel();
         const utterance = new SpeechSynthesisUtterance(text);
         utterance.rate = 1.05;
-        utterance.pitch = 1.25; // Higher pitch for typical assertive Indian mom tone
-        utterance.lang = 'te-IN'; // Telugu India locale, falls back gracefully
+        utterance.pitch = 1.25;
+        utterance.lang = 'te-IN';
         window.speechSynthesis.speak(utterance);
       }
     }
 
-    // 2. Render Functions
-    function renderTasks() {
-      const container = document.getElementById('tasksListContainer');
-      const pending = tasks.filter(t => t.status === 'pending');
-      document.getElementById('pendingTaskCount').innerText = pending.length;
-      document.getElementById('taskStatsPill').innerText = `${pending.length} Tasks Remaining`;
-
-      if (tasks.length === 0) {
-        container.innerHTML = `
-          <div class="py-10 text-center text-zinc-400">
-            <span class="text-4xl block mb-2">🎉</span>
-            <p class="text-sm font-bold text-zinc-700">Anni tasks aipoyayi!</p>
-            <p class="text-xs text-zinc-500">Amma ippudu ninnu em anadu, happy ga unnaaru!</p>
-          </div>
-        `;
-        return;
+    // 2. WEBCAM SURVEILLANCE INTEGRATION (USER ASKED)
+    async function startWebcam() {
+      const video = document.getElementById('webcamFeed');
+      const fallback = document.getElementById('camFallback');
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+        video.srcObject = stream;
+        fallback.classList.add('hidden');
+      } catch (err) {
+        console.warn("Webcam access error:", err);
+        fallback.classList.remove('hidden');
       }
+    }
 
-      container.innerHTML = tasks.map(t => {
-        const isDone = t.status === 'done';
+    function simulateSlacking() {
+      const box = document.getElementById('faceScanBox');
+      const state = document.getElementById('userAttentionState');
+      box.className = "absolute inset-6 border-2 border-dashed border-red-500 rounded-xl pointer-events-none flex items-start justify-end p-2 animate-ping";
+      box.innerHTML = `<span class="text-[9px] font-mono-code font-bold bg-red-600 text-white px-1.5 py-0.5 rounded">SLACKING DETECTED! 📱</span>`;
+      state.innerHTML = `<span class="text-red-600 font-bold">Scrolling Phone (Caught!)</span>`;
+
+      angerLevel = Math.min(100, angerLevel + 35);
+      updateMomMood();
+      throwFlyingChappal();
+
+      const scold = "Rey! Camera lo kanapaduthundi ra! Phone pakkana petti screen meeda choodu!";
+      triggerMomToast("WEBCAM ALERT 👁️", `"${scold}"`);
+      speakGeminiMaa(scold);
+
+      setTimeout(() => {
+        box.className = "absolute inset-6 border-2 border-dashed border-emerald-400/80 rounded-xl pointer-events-none flex items-start justify-end p-2 transition-all";
+        box.innerHTML = `<span class="text-[9px] font-mono-code font-bold bg-emerald-500 text-black px-1.5 py-0.5 rounded">STUDYING ✓</span>`;
+        state.innerHTML = `<span class="text-emerald-700 font-bold">Focused on Screen</span>`;
+      }, 4000);
+    }
+
+    // 3. AI ROADMAP GENERATOR (USER ASKED: "first lo nenu emi panulu cheyalianukuntuna ani motham aduguthadi dhani roadmap chesthadi")
+    function setQuickPrompt(val) {
+      document.getElementById('rawUserPlanInput').value = val;
+    }
+
+    function handleGenerateRoadmap(e) {
+      e.preventDefault();
+      const input = document.getElementById('rawUserPlanInput').value.trim();
+      if (!input) return;
+
+      const btn = document.getElementById('genRoadmapBtn');
+      btn.innerText = "Gemini Maa Planning...";
+      btn.disabled = true;
+
+      // Intelligent decomposition into 4-step actionable roadmap
+      const items = input.split(/[,;+and&]/).map(s => s.trim()).filter(Boolean);
+      
+      roadmap = [
+        { 
+          id: 1, 
+          phase: "Step 1: Deep Focus Sprint", 
+          title: items[0] || "Core Task Setup & Execution", 
+          time: "25 Mins", 
+          status: "pending", 
+          penaltyCount: 0 
+        },
+        { 
+          id: 2, 
+          phase: "Step 2: Execution Milestone", 
+          title: items[1] || "Deep Work & Problem Solving", 
+          time: "35 Mins", 
+          status: "pending", 
+          penaltyCount: 0 
+        },
+        { 
+          id: 3, 
+          phase: "Step 3: Verification & Polish", 
+          title: items[2] || "Review, Test & Final Delivery", 
+          time: "20 Mins", 
+          status: "pending", 
+          penaltyCount: 0 
+        },
+        { 
+          id: 4, 
+          phase: "Step 4: Amma Final Sign-Off", 
+          title: items[3] || "Clean desk, wrap up & report to Gemini Maa", 
+          time: "10 Mins", 
+          status: "pending", 
+          penaltyCount: 0 
+        }
+      ];
+
+      setTimeout(() => {
+        btn.innerText = "✨ Roadmap Ready!";
+        btn.disabled = false;
+        renderRoadmap();
+        updateMomMood();
+
+        confetti({ particleCount: 70, spread: 75, origin: { y: 0.6 } });
+        const voiceText = "Sare! Nuvvu cheppina panulaki roadmap ready chesa! Time ki complete chesthavo ledo camera lo nunchi choostha!";
+        speakGeminiMaa(voiceText);
+        triggerMomToast("Roadmap Locked!", `"${voiceText}"`);
+
+        document.getElementById('roadmapListContainer').scrollIntoView({ behavior: 'smooth' });
+      }, 800);
+    }
+
+    // 4. Render Roadmap Steps
+    function renderRoadmap() {
+      const container = document.getElementById('roadmapListContainer');
+      const completed = roadmap.filter(r => r.status === 'done').length;
+      document.getElementById('completedMilestones').innerText = `${completed} / ${roadmap.length} Steps Done`;
+
+      container.innerHTML = roadmap.map((item, idx) => {
+        const isDone = item.status === 'done';
         return `
-          <div class="p-4 rounded-2xl border ${isDone ? 'bg-emerald-50/50 border-emerald-200 opacity-60' : 'bg-white border-[#EFE8DE] shadow-2xs'} flex items-center justify-between gap-3 transition-all">
-            <div class="flex items-center gap-3">
-              <button onclick="toggleTaskStatus(${t.id})" class="w-6 h-6 rounded-lg border-2 ${isDone ? 'bg-emerald-600 border-emerald-600 text-white' : 'border-zinc-300 hover:border-rose-500'} flex items-center justify-center text-xs font-bold transition">
+          <div class="p-4 rounded-2xl border ${isDone ? 'bg-emerald-50/60 border-emerald-200 opacity-65' : 'bg-[#FAF7F2] border-[#EFE8DE] shadow-2xs'} flex flex-col sm:flex-row sm:items-center justify-between gap-3 transition-all">
+            <div class="flex items-start gap-3">
+              <button onclick="toggleRoadmapStep(${item.id})" class="mt-0.5 w-6 h-6 rounded-lg border-2 ${isDone ? 'bg-emerald-600 border-emerald-600 text-white' : 'border-zinc-300 hover:border-rose-500'} flex items-center justify-center text-xs font-bold transition">
                 ${isDone ? '✓' : ''}
               </button>
               <div>
-                <h4 class="text-xs font-bold ${isDone ? 'line-through text-zinc-400' : 'text-zinc-900'}">${t.title}</h4>
-                <div class="text-[11px] text-zinc-500 font-medium flex items-center gap-2 mt-0.5">
-                  <span class="font-mono-code">⏳ ${t.remaining} mins left</span>
-                  <span>•</span>
-                  <span>Target: ${t.duration} mins</span>
+                <span class="text-[10px] font-mono-code uppercase font-bold text-rose-700 tracking-wider block">
+                  ${item.phase}
+                </span>
+                <h4 class="text-xs sm:text-sm font-bold ${isDone ? 'line-through text-zinc-400' : 'text-zinc-900'} mt-0.5">
+                  ${item.title}
+                </h4>
+                <div class="text-[11px] text-zinc-500 font-medium flex items-center gap-2 mt-1">
+                  <span class="font-mono-code">⏳ Target: ${item.time}</span>
+                  ${item.penaltyCount > 0 ? `<span class="text-red-600 font-bold">• 🩴 Delayed ${item.penaltyCount}x</span>` : ''}
                 </div>
               </div>
             </div>
 
-            <div class="flex items-center gap-2">
+            <div class="flex items-center gap-2 self-end sm:self-center shrink-0">
               ${!isDone ? `
-                <button onclick="procrastinatePenalty(${t.id})" class="px-2.5 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 text-[11px] font-bold transition">
-                  Delay (+Amma Anger)
+                <button onclick="delayStepWithPenalty(${item.id})" class="px-2.5 py-1.5 rounded-xl bg-rose-100 hover:bg-rose-200 text-rose-800 border border-rose-200 text-[11px] font-bold transition active:scale-95">
+                  Delay (+Amma Kopam)
+                </button>
+                <button onclick="toggleRoadmapStep(${item.id})" class="px-3 py-1.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-white text-[11px] font-bold transition active:scale-95">
+                  Finish Step ✓
                 </button>
               ` : `
-                <span class="text-xs font-bold text-emerald-700">Aipoyindi! 🌟</span>
+                <span class="text-xs font-bold text-emerald-700 bg-emerald-100/80 px-2.5 py-1 rounded-lg">
+                  Finished! 🌟
+                </span>
               `}
-              <button onclick="deleteTask(${t.id})" class="text-zinc-400 hover:text-red-500 text-sm px-1 font-bold">✕</button>
             </div>
           </div>
         `;
       }).join('');
     }
 
+    function toggleRoadmapStep(id) {
+      const step = roadmap.find(r => r.id === id);
+      if (!step) return;
+
+      if (step.status === 'pending') {
+        step.status = 'done';
+        angerLevel = Math.max(0, angerLevel - 25);
+        confetti({ particleCount: 90, spread: 70, origin: { y: 0.6 } });
+        const praise = `"Bhesh! ${step.title} finish chesav! Ilaage anni cheyyi naanna!"`;
+        speakGeminiMaa(praise);
+        triggerMomToast("Amma Santhosham!", praise);
+      } else {
+        step.status = 'pending';
+        angerLevel = Math.min(100, angerLevel + 15);
+      }
+
+      updateMomMood();
+      renderRoadmap();
+    }
+
+    function delayStepWithPenalty(id) {
+      const step = roadmap.find(r => r.id === id);
+      if (step) step.penaltyCount++;
+
+      angerLevel = Math.min(100, angerLevel + 25);
+      updateMomMood();
+      throwFlyingChappal();
+
+      const scold = "Rey! Malli delay chesthunnava?! Ee step ippude complete cheyakapothe laptop charger laakunta!";
+      speakGeminiMaa(scold);
+      triggerMomToast("CHAPPAL WARNING!", `"${scold}"`);
+      renderRoadmap();
+    }
+
+    // 5. Blocked Sites Handling
     function renderBlockedSites() {
       const container = document.getElementById('blockedSitesList');
-      container.innerHTML = blockedSites.map((s, idx) => `
-        <div class="flex items-center justify-between p-2.5 rounded-xl bg-[#FAF7F2] border border-[#EAE1D5] text-xs">
-          <div class="flex items-center gap-2">
+      container.innerHTML = blockedSites.map(s => `
+        <div class="flex items-center justify-between p-2 rounded-xl bg-[#FAF7F2] border border-[#EAE1D5] text-xs">
+          <div class="flex items-center gap-1.5">
             <span class="w-2 h-2 rounded-full bg-red-500"></span>
-            <span class="font-bold text-zinc-800">${s.name}</span>
-            <span class="text-[10px] text-zinc-400 font-mono-code font-semibold">(${s.domain})</span>
+            <span class="font-bold text-zinc-800 text-[11px]">${s.name}</span>
           </div>
           <button onclick="testDistractionBlock('${s.domain}')" class="px-2 py-0.5 rounded-md bg-red-50 hover:bg-red-100 text-red-700 font-bold text-[10px] border border-red-200">
             Simulate Click
           </button>
         </div>
       `).join('');
-    }
-
-    // 3. User Interactions
-    function handleAddTask(e) {
-      e.preventDefault();
-      const title = document.getElementById('taskTitle').value.trim();
-      const duration = parseInt(document.getElementById('taskDuration').value);
-
-      tasks.unshift({
-        id: Date.now(),
-        title: title,
-        duration: duration,
-        remaining: duration,
-        status: "pending"
-      });
-
-      document.getElementById('taskTitle').value = '';
-      renderTasks();
-
-      // Amma response
-      angerLevel = Math.max(10, angerLevel - 5);
-      updateMomMood();
-      triggerMomToast("Amma Approved", `"Sare, ${title} anav ga... eppatlo aipothundo choostha!"`);
-    }
-
-    function toggleTaskStatus(id) {
-      const t = tasks.find(x => x.id === id);
-      if (!t) return;
-
-      if (t.status === 'pending') {
-        t.status = 'done';
-        angerLevel = Math.max(0, angerLevel - 25);
-        confetti({ particleCount: 90, spread: 70, origin: { y: 0.6 } });
-        triggerMomToast("Amma Santhosham!", `"Choodu! Chesukovachu kada ila? Repatnunchi roju ilaage cheyyi!"`);
-      } else {
-        t.status = 'pending';
-        angerLevel = Math.min(100, angerLevel + 15);
-      }
-
-      updateMomMood();
-      renderTasks();
-    }
-
-    function deleteTask(id) {
-      tasks = tasks.filter(x => x.id !== id);
-      renderTasks();
-    }
-
-    function procrastinatePenalty(id) {
-      angerLevel = Math.min(100, angerLevel + 25);
-      updateMomMood();
-      throwFlyingChappal();
-      triggerMomToast("CHAPPAL WARNING!", `"Inka delay chesthe pelli chesi pakkaki pampistha, em anukuntunnav!"`);
     }
 
     function addCustomBlockedSite() {
@@ -478,21 +567,18 @@
 
       blockedSites.push({
         domain: val,
-        name: val.split('.')[0].toUpperCase(),
-        blockedCount: 0
+        name: val.split('.')[0].toUpperCase()
       });
       input.value = '';
       renderBlockedSites();
-      triggerMomToast("Site Blocked", `"${val} ni block list lo pettesa, open chesthe nene unna!"`);
+      triggerMomToast("Site Blocked", `"${val} ni Gemini Maa firewall lo block list lo pettam!"`);
     }
 
-    // 4. Distraction Firewall / Screen Lock
     function testDistractionBlock(domain) {
       document.getElementById('blockedSiteDomain').innerText = domain;
       const modal = document.getElementById('siteBlockedModal');
       modal.classList.remove('hidden');
 
-      // Amma Rage Sound & Screen Shake
       document.body.classList.add('shake-rage');
       setTimeout(() => document.body.classList.remove('shake-rage'), 1200);
 
@@ -500,105 +586,67 @@
       updateMomMood();
       throwFlyingChappal();
 
-      const scold = `Rey! ${domain} enduku open chesav?! Pani aipokunda scroll chesthava? Phone switch off chestha!`;
+      const scold = `Rey! ${domain} enduku open chesav?! Roadmap inka migili undi, phone switch off chestha!`;
       document.getElementById('blockedSiteScold').innerText = `"${scold}"`;
-      speakTeluguMom(scold);
+      speakGeminiMaa(scold);
     }
 
     function dismissBlockedSiteModal() {
       document.getElementById('siteBlockedModal').classList.add('hidden');
     }
 
-    // 5. Flying Chappal Strike
     function throwFlyingChappal() {
       const overlay = document.getElementById('chappalOverlay');
       overlay.classList.remove('hidden');
       setTimeout(() => overlay.classList.add('hidden'), 900);
     }
 
-    // 6. Update Mom Mood and Dialect
+    // 6. Update Gemini Maa Mood & Visuals
     function updateMomMood() {
-      const badge = document.getElementById('momMoodBadge');
-      const angerText = document.getElementById('angerPercentage');
-      const risk = document.getElementById('chappalRisk');
-      const title = document.getElementById('momDialectTitle');
-      const avatar = document.getElementById('bigMomAvatar');
-      const hero = document.getElementById('ammaHeroCard');
+      const moodText = document.getElementById('momMoodText');
+      const angerText = document.getElementById('angerLevelText');
+      const emoji = document.getElementById('bigMomEmoji');
+      const heading = document.getElementById('momLiveVoiceHeading');
 
-      angerText.innerText = `${angerLevel}% (${angerLevel > 70 ? 'Extreme Kopam' : angerLevel > 40 ? 'Irritated' : 'Calm'})`;
+      angerText.innerText = `Anger: ${angerLevel}%`;
 
       if (angerLevel >= 75) {
-        badge.className = "text-[10px] font-mono-code uppercase px-2 py-0.5 rounded-full bg-red-100 text-red-800 font-bold border border-red-300";
-        badge.innerText = "🔴 Mood: Maha Kopam (Rage)";
-        risk.innerText = "🚨 HIGH (Chappal in Air)";
-        risk.className = "font-bold text-red-600";
-        avatar.innerText = "😡";
-        title.innerText = `"Chappal theeyala ippudu?! Pettey phone!"`;
-        hero.className = "mb-8 rounded-3xl p-6 sm:p-8 bg-gradient-to-br from-red-100 via-rose-50 to-orange-100 border-2 border-red-400 shadow-md transition-all duration-500";
+        moodText.className = "text-xs font-mono-code font-bold uppercase text-red-700 bg-red-50 px-2.5 py-0.5 rounded-full border border-red-200";
+        moodText.innerText = "Mood: Maha Kopam (Chappal Ready)";
+        emoji.innerText = "😡";
+        heading.innerText = `"Chappal theeyala ippudu?! Ventane roadmap finish cheyyi!"`;
       } else if (angerLevel >= 40) {
-        badge.className = "text-[10px] font-mono-code uppercase px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 font-bold border border-amber-300";
-        badge.innerText = "🟡 Mood: Chiraaku (Annoyed)";
-        risk.innerText = "⚠️ Medium";
-        risk.className = "font-bold text-amber-600";
-        avatar.innerText = "🤨";
-        title.innerText = `"Rey! Phone pakkana petti pani cheyyi ra!"`;
-        hero.className = "mb-8 rounded-3xl p-6 sm:p-8 bg-gradient-to-br from-amber-50 via-orange-50 to-rose-50 border-2 border-amber-300 shadow-sm transition-all duration-500";
+        moodText.className = "text-xs font-mono-code font-bold uppercase text-amber-700 bg-amber-50 px-2.5 py-0.5 rounded-full border border-amber-200";
+        moodText.innerText = "Mood: Chiraaku (Annoyed)";
+        emoji.innerText = "🤨";
+        heading.innerText = `"Rey! Camera lo choosthune unna, pakkaki thirigi sollu veyyaku!"`;
       } else {
-        badge.className = "text-[10px] font-mono-code uppercase px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-bold border border-emerald-200";
-        badge.innerText = "🟢 Mood: Shantam (Peaceful)";
-        risk.innerText = "🟢 None (Tiffins Ready)";
-        risk.className = "font-bold text-emerald-700";
-        avatar.innerText = "👵";
-        title.innerText = `"Manchi abbayi laga panulu aipogottuko naanna!"`;
-        hero.className = "mb-8 rounded-3xl p-6 sm:p-8 bg-gradient-to-br from-[#FFF8F6] via-[#FFF3EF] to-[#FFEBE5] border-2 border-rose-200 shadow-sm transition-all duration-500";
+        moodText.className = "text-xs font-mono-code font-bold uppercase text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200";
+        moodText.innerText = "Mood: Shantam (Monitoring)";
+        emoji.innerText = "👵";
+        heading.innerText = `"Roadmap chusi step-by-step complete cheyyi naanna!"`;
       }
     }
 
-    function calmAmmaDown() {
+    function calmGeminiMaa() {
       angerLevel = Math.max(10, angerLevel - 20);
       updateMomMood();
-      triggerMomToast("Amma Compromise", `"Sare! Correct ga 10 mins lo aipokapothe choodu em chesthano!"`);
-      speakTeluguMom("Correct ga 10 mins lo aipokapothe choodu!");
+      const txt = "Sare! Correct ga 10 mins lo aipokapothe choodu em chesthano!";
+      speakGeminiMaa(txt);
+      triggerMomToast("Gemini Maa Compromise", `"${txt}"`);
     }
 
     function triggerMomCall() {
       const randomScold = teluguMomScolds[Math.floor(Math.random() * teluguMomScolds.length)];
-      document.getElementById('momLiveScold').innerText = `"${randomScold}"`;
-      triggerMomToast("Incoming Mom Call 📞", randomScold);
-      speakTeluguMom(randomScold);
+      triggerMomToast("Incoming Gemini Maa Call 📞", randomScold);
+      speakGeminiMaa(randomScold);
       throwFlyingChappal();
     }
 
     function refreshSharmaComparison() {
       const comp = sharmaComparisons[Math.floor(Math.random() * sharmaComparisons.length)];
       document.getElementById('sharmaGariAbbayiFeed').innerText = `"${comp}"`;
-      speakTeluguMom(comp);
-    }
-
-    function playMomDialogue(type) {
-      if (type === 'phone') {
-        const text = "Annitiki aa phone ae karanam! Poddununchi daantlo em chusthavo em peekuthavo!";
-        speakTeluguMom(text);
-        triggerMomToast("Amma Voice", `"${text}"`);
-      } else if (type === 'sharma') {
-        const text = "Sharma gari abbayi ni chusi nerchuko! Vadu 35 LPA package tho settle ayyadu!";
-        speakTeluguMom(text);
-        triggerMomToast("Amma Voice", `"${text}"`);
-      } else {
-        const text = "Tini kurchodam thappa okka pani kuda sarriga cheyavu!";
-        speakTeluguMom(text);
-        triggerMomToast("Amma Voice", `"${text}"`);
-      }
-    }
-
-    function aiBreakdownTask() {
-      const pending = tasks.find(t => t.status === 'pending');
-      if (!pending) {
-        alert("Pending tasks em levu naanna!");
-        return;
-      }
-      const breakdownMsg = `Amma AI Advice for '${pending.title}':\n1. Phone switch off cheyyi (Next 25 mins)\n2. Table meedha water bottle pettuko\n3. First 5 mins lo intro start cheyyi!`;
-      alert(breakdownMsg);
+      speakGeminiMaa(comp);
     }
 
     function triggerMomToast(title, msg) {
@@ -615,8 +663,9 @@
       setTimeout(() => toast.remove(), 4200);
     }
 
-    // Init
-    renderTasks();
+    // Initialize
+    startWebcam();
+    renderRoadmap();
     renderBlockedSites();
     updateMomMood();
   </script>
