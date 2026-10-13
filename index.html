@@ -112,9 +112,13 @@
       </div>
 
       <div class="flex items-center gap-2">
+        <button onclick="openFightModal()" class="text-xs px-3.5 py-1.5 rounded-full bg-red-600 hover:bg-red-700 text-white font-extrabold transition flex items-center gap-1.5 shadow-sm active:scale-95 animate-bounce">
+          <span>🥊</span>
+          <span>Settle Group Fight!</span>
+        </button>
         <button onclick="openMatchmakerModal()" class="text-xs px-3.5 py-1.5 rounded-full bg-gradient-to-r from-amber-600 to-[#C85A17] hover:from-amber-700 hover:to-[#B34F12] text-white font-bold transition flex items-center gap-1.5 shadow-sm active:scale-95">
           <span>🎯</span>
-          <span>Match Group Adda</span>
+          <span>Match Vibe</span>
         </button>
         <button onclick="openShareModal()" class="text-xs px-3.5 py-1.5 rounded-full bg-[#1C1917] hover:bg-[#2E2825] text-white font-semibold transition flex items-center gap-1.5 shadow-sm active:scale-95">
           <span>🔗</span>
@@ -127,6 +131,39 @@
       </div>
     </div>
   </header>
+
+  <!-- UNIQUE FEATURE 1: ARGUMENT SETTLER / HANDI TOSS MODAL -->
+  <div id="fightModal" class="fixed inset-0 bg-black/50 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl p-6 sm:p-7 max-w-sm w-full shadow-2xl border border-black/5 text-center relative">
+      <div class="flex items-center justify-between pb-3 border-b border-zinc-100 mb-3 text-left">
+        <div>
+          <span class="text-[10px] font-mono-code uppercase font-bold text-red-600 tracking-wider">Argument Killer</span>
+          <h3 class="font-serif-title text-lg font-bold text-zinc-900">Hyderabadi Dum Toss 🪙</h3>
+        </div>
+        <button onclick="closeFightModal()" class="w-7 h-7 rounded-full bg-zinc-100 text-zinc-600 hover:text-black font-bold text-xs">✕</button>
+      </div>
+
+      <p class="text-xs text-zinc-500 mb-4">
+        Group lo iddariki godava aithunda? Toss veyyi, evadu gelisthe vallu cheppe adda ke vellali!
+      </p>
+
+      <div class="py-4">
+        <div id="tossCoin" class="w-24 h-24 mx-auto rounded-full bg-gradient-to-tr from-[#C85A17] to-amber-400 border-4 border-amber-200 flex items-center justify-center text-4xl shadow-xl transition-all duration-700 transform">
+          🍗
+        </div>
+      </div>
+
+      <div id="tossResult" class="min-h-[50px] flex items-center justify-center text-xs font-bold text-zinc-800 px-3">
+        "Toss cheyadaniki kinda button nokkandi ustaad!"
+      </div>
+
+      <div class="mt-4 flex gap-2">
+        <button onclick="spinHandiToss()" id="tossActionBtn" class="w-full py-3 rounded-2xl bg-zinc-950 hover:bg-zinc-800 text-white font-bold text-xs tracking-wide shadow-md transition active:scale-95 flex items-center justify-center gap-2">
+          <span>🎲</span> Flip the Dum Coin!
+        </button>
+      </div>
+    </div>
+  </div>
 
   <!-- SECRET GROUP PREFERENCE MATCHMAKER MODAL (APPLE-GRADE SLICK DRAWER) -->
   <div id="matchmakerModal" class="fixed inset-0 bg-black/45 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
@@ -800,11 +837,16 @@
             </div>
 
             <!-- FOOTER -->
-            <div class="mt-4 pt-3 border-t border-[#F0E8DC] flex items-center justify-between text-xs">
-              <span class="font-mono-code text-[#786C5E] text-[11px]">Overall Score: <strong class="text-[#231F20]">${comp}/10</strong></span>
-              <button onclick="openRateModal(${s.id})" class="px-3 py-1.5 rounded-lg bg-[#FAF4EB] hover:bg-[#F3E8D7] text-[#C85A17] font-bold text-[11px] border border-[#ECDDC8] transition">
-                Rate All 4 Criteria ★
-              </button>
+            <div class="mt-4 pt-3 border-t border-[#F0E8DC] flex items-center justify-between text-xs gap-2">
+              <span class="font-mono-code text-[#786C5E] text-[11px]">Overall: <strong class="text-[#231F20]">${comp}/10</strong></span>
+              <div class="flex items-center gap-1.5">
+                <button onclick="copyFriendExcuse('${s.name}')" class="px-2.5 py-1.5 rounded-lg bg-[#FFF2E5] hover:bg-[#FFE3C7] text-[#C85A17] font-semibold text-[11px] border border-[#FCDCC0] transition flex items-center gap-1">
+                  <span>💬</span> Convince Friend
+                </button>
+                <button onclick="openRateModal(${s.id})" class="px-2.5 py-1.5 rounded-lg bg-[#FAF4EB] hover:bg-[#F3E8D7] text-[#C85A17] font-bold text-[11px] border border-[#ECDDC8] transition">
+                  Rate ★
+                </button>
+              </div>
             </div>
           </div>
         `;
@@ -877,6 +919,72 @@
         icon: "🔄",
         badge: "POLL RESET",
         msg: "Event floor voting zero chesam. Kothaga votes veyyandi ustaad!"
+      });
+    }
+
+    // UNIQUE FEATURE 1: Argument Killer Toss
+    function openFightModal() {
+      document.getElementById('fightModal').classList.remove('hidden');
+    }
+
+    function closeFightModal() {
+      document.getElementById('fightModal').classList.add('hidden');
+    }
+
+    function spinHandiToss() {
+      const coin = document.getElementById('tossCoin');
+      const res = document.getElementById('tossResult');
+      const btn = document.getElementById('tossActionBtn');
+
+      btn.disabled = true;
+      btn.innerText = "Tossing in the air...";
+      coin.style.transform = "rotateY(1440deg) scale(1.15)";
+      res.innerText = "Dum Handi toss avthundi...";
+
+      setTimeout(() => {
+        const topTwo = spots.slice(0, 2);
+        const winner = Math.random() > 0.5 ? topTwo[0] : (topTwo[1] || topTwo[0]);
+        const loser = winner.id === topTwo[0]?.id ? (topTwo[1] || topTwo[0]) : topTwo[0];
+
+        coin.style.transform = "rotateY(0deg) scale(1)";
+        res.innerHTML = `
+          <div class="space-y-1">
+            <span class="text-emerald-700 font-extrabold text-sm block">👑 ${winner.name} Gelichindi!</span>
+            <span class="text-[11px] text-zinc-600 font-medium block">
+              Opponent group silent aipondi! ${loser ? loser.name : 'Vere vallu'} vote vesina vallu direct ga bill kattalsinde!
+            </span>
+          </div>
+        `;
+
+        btn.disabled = false;
+        btn.innerText = "Toss Again 🎲";
+        confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+        triggerSlangAlert({
+          icon: "🪙",
+          badge: "TOSS VERDICT",
+          msg: `Toss Verdict: Final ga ${winner.name} locked! No more arguments in group!`
+        });
+      }, 1200);
+    }
+
+    // UNIQUE FEATURE 2: Friend Convincer Slang Excuse Generator
+    const friendExcuses = [
+      "Miya, akkada Biryani tho paatu killer Paneer 65 and Butter Naan kuda untadi ani cheppu, silent ga vachestadu!",
+      "Ustaad, 'Nene bike drive chestha, petrol kuda nene poyistha' ani cheppu, 5 minutes lo ready aithadu!",
+      "Arey babu, 'Bill nenu split lo adjust chestha' ani dialogue kottu, ventane car ekki kurchuntadu!",
+      "Miya, 'Akkada vellaka Irani Chai and Osmania Biscuit treat naadhe' ani cheppu, double speed tho osthadu!",
+      "'Today only fresh Zafrani handi open chesaru, miss aite inko 6 months ilanti dum dorakadu' ani hype ivvu!"
+    ];
+
+    function copyFriendExcuse(spotName) {
+      const excuse = friendExcuses[Math.floor(Math.random() * friendExcuses.length)];
+      const fullText = `[For ${spotName}]: "${excuse}"`;
+      navigator.clipboard.writeText(fullText).then(() => {
+        triggerSlangAlert({
+          icon: "💬",
+          badge: "EXCUSE COPIED",
+          msg: `Convince Excuse copied: "${excuse}"`
+        });
       });
     }
 
