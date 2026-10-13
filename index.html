@@ -7,11 +7,44 @@
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <!-- Fonts: General Sans (Fontshare CDN) and Outfit (Local TTF + Google Fonts fallback) -->
+  <link href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&display=swap" rel="stylesheet">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,800;1,600&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
   
   <style>
+    @font-face {
+      font-family: 'Outfit';
+      src: url('./Outfit-Regular.ttf') format('truetype');
+      font-weight: 400;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: 'Outfit';
+      src: url('./Outfit-Medium.ttf') format('truetype');
+      font-weight: 500;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: 'Outfit';
+      src: url('./Outfit-SemiBold.ttf') format('truetype');
+      font-weight: 600;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: 'Outfit';
+      src: url('./Outfit-Bold.ttf') format('truetype');
+      font-weight: 700;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: 'Outfit';
+      src: url('./Outfit-ExtraBold.ttf') format('truetype');
+      font-weight: 800;
+      font-style: normal;
+    }
+
     :root {
       --bg-cream: #FBF8F3;
       --card-bg: #FFFFFF;
@@ -24,10 +57,10 @@
     body {
       background-color: var(--bg-cream);
       color: var(--charcoal);
-      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-family: 'General Sans', 'Google Sans', -apple-system, sans-serif;
     }
-    .font-serif-title {
-      font-family: 'Playfair Display', serif;
+    h1, h2, h3, .font-heading, .font-serif-title {
+      font-family: 'Outfit', sans-serif !important;
     }
     .font-mono-code {
       font-family: 'JetBrains Mono', monospace;
