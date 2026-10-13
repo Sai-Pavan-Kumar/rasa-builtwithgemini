@@ -3,1143 +3,622 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DumVerdict — Hyderabad Biryani Decision Engine</title>
+  <title>AmmaGPT — The Desi Mom Anti-Procrastination Enforcer</title>
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-  <!-- Fonts: General Sans (Fontshare CDN) and Outfit (Local TTF + Google Fonts fallback) -->
-  <link href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&display=swap" rel="stylesheet">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
-  
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+
   <style>
     @font-face {
       font-family: 'Outfit';
       src: url('./Outfit-Regular.ttf') format('truetype');
       font-weight: 400;
-      font-style: normal;
-    }
-    @font-face {
-      font-family: 'Outfit';
-      src: url('./Outfit-Medium.ttf') format('truetype');
-      font-weight: 500;
-      font-style: normal;
-    }
-    @font-face {
-      font-family: 'Outfit';
-      src: url('./Outfit-SemiBold.ttf') format('truetype');
-      font-weight: 600;
-      font-style: normal;
     }
     @font-face {
       font-family: 'Outfit';
       src: url('./Outfit-Bold.ttf') format('truetype');
       font-weight: 700;
-      font-style: normal;
-    }
-    @font-face {
-      font-family: 'Outfit';
-      src: url('./Outfit-ExtraBold.ttf') format('truetype');
-      font-weight: 800;
-      font-style: normal;
     }
 
-    :root {
-      --bg-cream: #FBF8F3;
-      --card-bg: #FFFFFF;
-      --border-warm: #EFE8DE;
-      --terracotta: #C85A17;
-      --saffron: #E67E22;
-      --saffron-subtle: #FFF4EB;
-      --charcoal: #231F20;
-    }
     body {
-      background-color: var(--bg-cream);
-      color: var(--charcoal);
-      font-family: 'General Sans', 'Google Sans', -apple-system, sans-serif;
+      background-color: #FBF8F3;
+      color: #231F20;
+      font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
     }
-    h1, h2, h3, .font-heading, .font-serif-title {
+    h1, h2, h3, .font-heading {
       font-family: 'Outfit', sans-serif !important;
     }
     .font-mono-code {
       font-family: 'JetBrains Mono', monospace;
     }
-    .food-card {
-      background: #FFFFFF;
-      border: 1px solid #EFE8DE;
-      box-shadow: 0 4px 20px -2px rgba(184, 134, 76, 0.08);
+
+    /* Screen shake when Amma gets angry */
+    @keyframes screenShake {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-8px) rotate(-1deg); }
+      40% { transform: translateX(8px) rotate(1deg); }
+      60% { transform: translateX(-6px); }
+      80% { transform: translateX(6px); }
     }
-    .food-card:hover {
-      box-shadow: 0 10px 30px -4px rgba(184, 134, 76, 0.14);
-      border-color: #E2D6C5;
+    .shake-rage {
+      animation: screenShake 0.4s ease-in-out infinite;
     }
-    .pill-active {
-      background-color: #C85A17;
-      color: #FFFFFF;
+
+    /* Flying chappal animation */
+    @keyframes flyingChappal {
+      0% { transform: translateY(100vh) rotate(0deg) scale(0.3); opacity: 0; }
+      50% { transform: translateY(0) rotate(720deg) scale(1.3); opacity: 1; }
+      100% { transform: translateY(-30px) rotate(1080deg) scale(1); opacity: 1; }
     }
-    .pill-inactive {
-      background-color: #FFFFFF;
-      color: #6B5E53;
-      border: 1px solid #EFE8DE;
-    }
-    .meter-bg {
-      background: #F3ECE2;
-      height: 5px;
-      border-radius: 9999px;
-      overflow: hidden;
+    .chappal-strike {
+      animation: flyingChappal 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
     }
   </style>
 </head>
-<body class="min-h-screen selection:bg-orange-200 selection:text-orange-950 pb-20">
+<body class="min-h-screen pb-24 selection:bg-rose-200 selection:text-rose-950">
 
-  <!-- TOP NAVIGATION BAR -->
+  <!-- TOP APP BAR -->
   <header class="bg-white/90 backdrop-blur-md border-b border-[#EFE8DE] sticky top-0 z-40">
-    <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+    <div class="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
       <div class="flex items-center gap-3">
-        <div class="w-9 h-9 rounded-xl bg-[#FFF4EB] border border-[#F5D8BF] flex items-center justify-center text-lg shadow-sm">
-          🍗
+        <div id="momAvatarMini" class="w-10 h-10 rounded-2xl bg-rose-50 border border-rose-200 flex items-center justify-center text-2xl shadow-sm transition-transform duration-300">
+          👩‍👧
         </div>
         <div>
           <div class="flex items-center gap-2">
-            <span class="font-serif-title text-lg font-bold text-[#231F20] tracking-tight">DumVerdict</span>
-            <span class="text-[10px] uppercase font-mono-code px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 font-bold">
-              Live Room Active
+            <span class="font-heading text-lg font-black text-[#231F20] tracking-tight">AmmaGPT</span>
+            <span id="momMoodBadge" class="text-[10px] font-mono-code uppercase px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-bold border border-emerald-200">
+              🟢 Mood: Shantam (Calm)
             </span>
           </div>
-          <p class="text-[11px] text-[#786C5E] font-medium">Solve the Group Biryani Argument • Hyderabadi Edition</p>
+          <p class="text-[11px] text-[#786C5E] font-medium">Desi Mom AI Anti-Procrastination & Distraction Firewall</p>
         </div>
       </div>
 
       <div class="flex items-center gap-2">
-        <button onclick="openFightModal()" class="text-xs px-3.5 py-1.5 rounded-full bg-red-600 hover:bg-red-700 text-white font-extrabold transition flex items-center gap-1.5 shadow-sm active:scale-95 animate-bounce">
-          <span>🥊</span>
-          <span>Settle Group Fight!</span>
+        <button onclick="testDistractionBlock('instagram.com')" class="text-xs px-3 py-1.5 rounded-full bg-red-100 hover:bg-red-200 border border-red-300 text-red-800 font-bold transition flex items-center gap-1 active:scale-95">
+          <span>🚫</span> Test Site Block
         </button>
-        <button onclick="openMatchmakerModal()" class="text-xs px-3.5 py-1.5 rounded-full bg-gradient-to-r from-amber-600 to-[#C85A17] hover:from-amber-700 hover:to-[#B34F12] text-white font-bold transition flex items-center gap-1.5 shadow-sm active:scale-95">
-          <span>🎯</span>
-          <span>Match Vibe</span>
-        </button>
-        <button onclick="openShareModal()" class="text-xs px-3.5 py-1.5 rounded-full bg-[#1C1917] hover:bg-[#2E2825] text-white font-semibold transition flex items-center gap-1.5 shadow-sm active:scale-95">
-          <span>🔗</span>
-          <span>Share</span>
-        </button>
-        <button onclick="triggerSlangAlert()" class="text-xs px-3 py-1.5 rounded-full bg-red-50 border border-red-200/80 text-red-700 font-semibold hover:bg-red-100 transition flex items-center gap-1.5">
-          <span>⚠️</span>
-          <span>Street Alert</span>
+        <button onclick="triggerMomCall()" class="text-xs px-3.5 py-1.5 rounded-full bg-rose-600 hover:bg-rose-700 text-white font-extrabold transition shadow-sm flex items-center gap-1.5 active:scale-95">
+          <span>📞</span> Amma Calling!
         </button>
       </div>
     </div>
   </header>
 
-  <!-- UNIQUE FEATURE 1: ARGUMENT SETTLER / HANDI TOSS MODAL -->
-  <div id="fightModal" class="fixed inset-0 bg-black/50 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl p-6 sm:p-7 max-w-sm w-full shadow-2xl border border-black/5 text-center relative">
-      <div class="flex items-center justify-between pb-3 border-b border-zinc-100 mb-3 text-left">
-        <div>
-          <span class="text-[10px] font-mono-code uppercase font-bold text-red-600 tracking-wider">Argument Killer</span>
-          <h3 class="font-serif-title text-lg font-bold text-zinc-900">Hyderabadi Dum Toss 🪙</h3>
-        </div>
-        <button onclick="closeFightModal()" class="w-7 h-7 rounded-full bg-zinc-100 text-zinc-600 hover:text-black font-bold text-xs">✕</button>
-      </div>
+  <!-- MAIN WRAPPER -->
+  <main class="max-w-5xl mx-auto px-4 pt-6">
 
-      <p class="text-xs text-zinc-500 mb-3">
-        Evari madhyana fight jarugutundo aa rendu addas select cheyyandi:
-      </p>
-
-      <!-- Spot Rivalry Selector -->
-      <div class="space-y-2 mb-3 text-left">
-        <div>
-          <label class="text-[10px] font-bold text-zinc-600 uppercase font-mono-code">Friend 1 Adda (Heads 🍗):</label>
-          <select id="tossSpotA" class="w-full bg-zinc-50 border border-zinc-200 rounded-xl px-2.5 py-1.5 text-xs text-zinc-800 font-semibold focus:outline-none focus:border-[#C85A17]">
-          </select>
-        </div>
-        <div class="text-center font-bold text-red-500 text-xs py-0.5">⚡ VS ⚡</div>
-        <div>
-          <label class="text-[10px] font-bold text-zinc-600 uppercase font-mono-code">Friend 2 Adda (Tails 🍚):</label>
-          <select id="tossSpotB" class="w-full bg-zinc-50 border border-zinc-200 rounded-xl px-2.5 py-1.5 text-xs text-zinc-800 font-semibold focus:outline-none focus:border-[#C85A17]">
-          </select>
-        </div>
-      </div>
-
-      <div class="py-2">
-        <div id="tossCoin" class="w-20 h-20 mx-auto rounded-full bg-gradient-to-tr from-[#C85A17] to-amber-400 border-4 border-amber-200 flex flex-col items-center justify-center shadow-xl transition-all duration-700 transform">
-          <span id="coinEmoji" class="text-2xl">🍗</span>
-          <span id="coinLabel" class="text-[9px] font-bold text-white uppercase tracking-tight">HEADS</span>
-        </div>
-      </div>
-
-      <div id="tossResult" class="min-h-[46px] flex items-center justify-center text-xs font-bold text-zinc-800 px-2 my-1">
-        "Toss button nokkandi, true 50-50 verdict osthadi!"
-      </div>
-
-      <div class="mt-3 flex gap-2">
-        <button onclick="spinHandiToss()" id="tossActionBtn" class="w-full py-2.5 rounded-2xl bg-zinc-950 hover:bg-zinc-800 text-white font-bold text-xs tracking-wide shadow-md transition active:scale-95 flex items-center justify-center gap-2">
-          <span>🎲</span> Flip Coin (50/50 Settle)
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- SECRET GROUP PREFERENCE MATCHMAKER MODAL (APPLE-GRADE SLICK DRAWER) -->
-  <div id="matchmakerModal" class="fixed inset-0 bg-black/45 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl p-6 sm:p-7 max-w-md w-full shadow-2xl border border-black/5 relative transform transition-all max-h-[92vh] overflow-y-auto">
-      <div class="flex items-center justify-between pb-3.5 border-b border-zinc-100 mb-4">
-        <div>
-          <span class="text-[10px] font-mono-code uppercase font-bold text-[#C85A17] tracking-wider">Secret Group Algorithm</span>
-          <h3 class="font-serif-title text-xl font-bold text-zinc-900 mt-0.5">Group Vibe Matcher 🎯</h3>
-          <p class="text-xs text-zinc-500">Scores & budget set cheyyi, matching secret addas reveal aithayi</p>
-        </div>
-        <button onclick="closeMatchmakerModal()" class="w-8 h-8 rounded-full bg-zinc-100 text-zinc-600 hover:text-black flex items-center justify-center font-bold text-sm">✕</button>
-      </div>
-
-      <form onsubmit="calculateSecretMatch(event)" class="space-y-4 text-xs">
-        <!-- Criterion 1: Taste Minimum -->
-        <div class="bg-zinc-50 p-3.5 rounded-2xl border border-zinc-200/70">
-          <div class="flex justify-between items-center mb-1.5">
-            <span class="font-bold text-zinc-800">🍗 Minimum Taste / Dhum Score</span>
-            <span id="prefTasteDisplay" class="font-mono-code font-bold text-[#C85A17]">8.5+ / 10</span>
+    <!-- AMMA LIVE DASHBOARD / MOOD HERO CARD -->
+    <section id="ammaHeroCard" class="mb-8 rounded-3xl p-6 sm:p-8 bg-gradient-to-br from-[#FFF8F6] via-[#FFF3EF] to-[#FFEBE5] border-2 border-rose-200 shadow-sm relative overflow-hidden transition-all duration-500">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
+        <div class="flex items-start gap-4">
+          <!-- Big Interactive Mom Avatar -->
+          <div id="bigMomAvatar" class="w-20 h-20 sm:w-24 sm:h-24 rounded-3xl bg-white border-2 border-rose-200 flex flex-col items-center justify-center text-4xl sm:text-5xl shadow-md shrink-0 transition-transform">
+            👵
           </div>
-          <input type="range" min="7" max="9.8" step="0.1" value="8.5" id="prefTaste" oninput="document.getElementById('prefTasteDisplay').innerText = this.value + '+ / 10'" class="w-full accent-[#C85A17]">
-          <p class="text-[10px] text-zinc-400 mt-1">8.5+ ante hardcore authentic biryani lovers matrame!</p>
-        </div>
 
-        <!-- Criterion 2: Ambience Minimum -->
-        <div class="bg-zinc-50 p-3.5 rounded-2xl border border-zinc-200/70">
-          <div class="flex justify-between items-center mb-1.5">
-            <span class="font-bold text-zinc-800">🪑 Ambience Expectation</span>
-            <span id="prefAmbienceDisplay" class="font-mono-code font-bold text-zinc-700">6.0+ (Street ok)</span>
-          </div>
-          <input type="range" min="5" max="9" step="0.5" value="6.0" id="prefAmbience" oninput="updateAmbienceLabel(this.value)" class="w-full accent-[#C85A17]">
-          <p class="text-[10px] text-zinc-400 mt-1" id="ambienceSubtext">Gully street adda ayna parvaleda leka AC seating kavala?</p>
-        </div>
+          <div>
+            <div class="inline-flex items-center gap-2 text-xs font-mono-code uppercase tracking-wider text-rose-700 font-bold mb-1">
+              <span class="w-2 h-2 rounded-full bg-rose-600 animate-ping"></span>
+              Live Mom Surveillance Engine
+            </div>
+            <h1 id="momDialectTitle" class="font-heading text-2xl sm:text-3xl font-extrabold text-[#231F20]">
+              "Rey! Phone pakkana petti pani cheyyi ra!"
+            </h1>
+            <p id="momLiveScold" class="text-xs sm:text-sm text-[#635547] mt-1.5 max-w-xl font-medium leading-relaxed bg-white/70 p-3 rounded-2xl border border-rose-100">
+              "Poddununchi phone chusthune unnav... Sharma gari abbayi ippatike 3 projects aipogotti job lo join ayyadu, nuvvu inka bed meedha dhorluthunnav!"
+            </p>
 
-        <!-- Criterion 3: Max Budget per person -->
-        <div class="bg-zinc-50 p-3.5 rounded-2xl border border-zinc-200/70">
-          <div class="flex justify-between items-center mb-1.5">
-            <span class="font-bold text-zinc-800">💸 Max Budget per Person</span>
-            <span id="prefPriceDisplay" class="font-mono-code font-bold text-emerald-700">₹300 /-</span>
-          </div>
-          <input type="range" min="200" max="400" step="25" value="300" id="prefPrice" oninput="document.getElementById('prefPriceDisplay').innerText = '₹' + this.value + ' / -'" class="w-full accent-[#C85A17]">
-        </div>
-
-        <!-- Criterion 4: Vehicle & Parking Priority -->
-        <div class="bg-zinc-50 p-3.5 rounded-2xl border border-zinc-200/70">
-          <label class="block font-bold text-zinc-800 mb-1.5">🚗 Car lo velthunnara or Bike?</label>
-          <div class="grid grid-cols-2 gap-2">
-            <label class="flex items-center gap-2 p-2 rounded-xl bg-white border border-zinc-200 cursor-pointer text-xs font-semibold">
-              <input type="radio" name="vehicle" value="bike" checked class="accent-[#C85A17]">
-              <span>🏍️ Bike / Metro (Flexible)</span>
-            </label>
-            <label class="flex items-center gap-2 p-2 rounded-xl bg-white border border-zinc-200 cursor-pointer text-xs font-semibold">
-              <input type="radio" name="vehicle" value="car" class="accent-[#C85A17]">
-              <span>🚗 Car (Valet Must)</span>
-            </label>
+            <!-- STATS ROW -->
+            <div class="flex flex-wrap items-center gap-2.5 mt-4 text-xs font-medium">
+              <div class="bg-white px-3 py-1.5 rounded-xl border border-rose-200 flex items-center gap-1.5">
+                <span class="text-zinc-500">Pending Tasks:</span>
+                <span id="pendingTaskCount" class="font-mono-code font-bold text-rose-700">3</span>
+              </div>
+              <div class="bg-white px-3 py-1.5 rounded-xl border border-rose-200 flex items-center gap-1.5">
+                <span class="text-zinc-500">Amma Anger Level:</span>
+                <span id="angerPercentage" class="font-mono-code font-bold text-amber-700">25% (Warning)</span>
+              </div>
+              <div class="bg-white px-3 py-1.5 rounded-xl border border-rose-200 flex items-center gap-1.5">
+                <span class="text-zinc-500">Flying Chappal Risk:</span>
+                <span id="chappalRisk" class="font-bold text-emerald-700">🟢 Low</span>
+              </div>
+            </div>
           </div>
         </div>
 
-        <button type="submit" class="w-full py-3 rounded-2xl bg-[#C85A17] hover:bg-[#B34F12] text-white font-bold text-xs tracking-wide shadow-md transition active:scale-95 flex items-center justify-center gap-2">
-          <span>✨</span> Reveal Secret Matching Addas
-        </button>
-      </form>
-    </div>
-  </div>
-
-  <!-- APPLE-LEVEL SHARE MODAL -->
-  <div id="shareModal" class="fixed inset-0 bg-black/40 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl p-6 sm:p-7 max-w-sm w-full shadow-2xl border border-black/5 relative transform transition-all">
-      <div class="flex items-center justify-between pb-3 border-b border-zinc-100 mb-4">
-        <div>
-          <h3 class="font-serif-title text-lg font-bold text-zinc-900">Share with Friends</h3>
-          <p class="text-xs text-zinc-500">Invite group to vote on their favorite adda</p>
-        </div>
-        <button onclick="closeShareModal()" class="w-7 h-7 rounded-full bg-zinc-100 text-zinc-600 hover:text-black flex items-center justify-center font-bold text-xs">✕</button>
-      </div>
-
-      <div class="space-y-3">
-        <!-- Live Link Box -->
-        <div class="bg-zinc-50 border border-zinc-200/80 rounded-2xl p-3 flex items-center justify-between gap-2">
-          <input id="shareUrlInput" readonly class="text-xs text-zinc-600 bg-transparent outline-none w-full truncate font-mono-code" value="">
-          <button onclick="copyShareLink()" id="copyBtn" class="shrink-0 px-3 py-1.5 rounded-xl bg-zinc-900 text-white font-semibold text-xs hover:bg-zinc-800 transition active:scale-95">
-            Copy
+        <!-- AMMA QUICK ACTIONS -->
+        <div class="flex flex-col gap-2 shrink-0">
+          <button onclick="aiBreakdownTask()" class="px-5 py-3 rounded-2xl bg-rose-600 hover:bg-rose-700 text-white font-extrabold text-xs shadow-md transition flex items-center justify-center gap-2 active:scale-95">
+            <span>✨</span> AI Task Decomposition (Cheppuko)
+          </button>
+          <button onclick="calmAmmaDown()" class="px-4 py-2.5 rounded-2xl bg-white hover:bg-rose-50 border border-rose-200 text-xs font-bold text-[#786C5E] transition flex items-center justify-center gap-1.5">
+            <span>🙏</span> "Amma 10 mins lo aipothundi" (Beg for time)
           </button>
         </div>
-
-        <!-- WhatsApp Quick Share -->
-        <a id="whatsappShareBtn" target="_blank" href="#" class="w-full py-2.5 px-4 rounded-2xl bg-[#25D366] hover:bg-[#20BA5A] text-white font-bold text-xs flex items-center justify-center gap-2 shadow-sm transition active:scale-95">
-          <span>💬</span> Share directly on WhatsApp
-        </a>
-
-        <div class="text-[11px] text-zinc-400 text-center pt-1 font-medium">
-          Anyone with this link can view the live leader and cast votes.
-        </div>
       </div>
-    </div>
-  </div>
+    </section>
 
-  <!-- MAIN CONTAINER -->
-  <main class="max-w-6xl mx-auto px-4 pt-7">
+    <!-- TWO-COLUMN GRID: TASKS + DISTRACTION BLOCKER -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-    <!-- GLOBAL CONSENSUS LEADERBOARD (WARM EDITORIAL HERO) -->
-    <section class="mb-8 rounded-3xl p-6 sm:p-8 bg-gradient-to-br from-[#FFF9F2] via-[#FFF5E8] to-[#FDF0DE] border border-[#EADBCE] shadow-sm relative overflow-hidden">
-      <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 relative z-10">
-        <div>
-          <div class="inline-flex items-center gap-2 text-xs font-mono-code uppercase tracking-wider text-[#C85A17] font-bold mb-2">
-            <span class="w-2.5 h-2.5 rounded-full bg-[#C85A17] animate-ping"></span>
-            Current Event Floor #1 Consensus Winner
+      <!-- LEFT: TASKS & POMODORO (2 COLS) -->
+      <div class="lg:col-span-2 space-y-6">
+
+        <!-- ADD TASK FORM -->
+        <div class="bg-white rounded-3xl p-6 border border-[#EFE8DE] shadow-sm">
+          <div class="flex items-center justify-between mb-4 pb-3 border-b border-[#F4EDE4]">
+            <div>
+              <span class="text-[10px] font-mono-code uppercase font-bold text-rose-700 tracking-wider">Commitment to Amma</span>
+              <h2 class="font-heading text-lg font-bold text-[#231F20]">Ivala Chesi Teeralsina Panulu (Tasks)</h2>
+            </div>
+            <span class="text-2xl">📋</span>
           </div>
-          <h1 id="leaderTitle" class="font-serif-title text-3xl sm:text-4xl font-extrabold text-[#231F20] leading-tight flex items-center gap-2">
-            Hotel Rumaan (Mallepally) 👑
-          </h1>
-          <p id="leaderDesc" class="text-sm text-[#635547] mt-2 max-w-2xl leading-relaxed">
-            Ranked highest by attendees across pure Dhum Taste, Rich Salan & Value. Zero fluff, 100% authentic local heritage.
+
+          <form onsubmit="handleAddTask(event)" class="space-y-3">
+            <div class="flex flex-col sm:flex-row gap-2">
+              <input 
+                required 
+                id="taskTitle" 
+                type="text" 
+                placeholder="Emi cheyali? (e.g. Resume complete cheyyadam, Math assignment...)" 
+                class="flex-1 bg-[#FAF7F2] border border-[#EAE1D5] rounded-2xl px-4 py-2.5 text-xs text-[#231F20] focus:bg-white focus:outline-none focus:border-rose-500 font-medium"
+              >
+              <select id="taskDuration" class="bg-[#FAF7F2] border border-[#EAE1D5] rounded-2xl px-3 py-2.5 text-xs text-[#231F20] focus:outline-none font-semibold">
+                <option value="15">15 Mins (Fast)</option>
+                <option value="30" selected>30 Mins (Standard)</option>
+                <option value="60">1 Hour (Deep)</option>
+                <option value="120">2 Hours (Exam Mode)</option>
+              </select>
+              <button type="submit" class="px-5 py-2.5 rounded-2xl bg-zinc-950 hover:bg-zinc-800 text-white font-bold text-xs shadow-md transition active:scale-95 shrink-0">
+                + Amma ki Cheppu
+              </button>
+            </div>
+            <p class="text-[11px] text-[#A09384] italic">
+              💡 Tip: Task deadline daatithe Amma nunchi direct Telugu audio dialogue & screen lock osthadi!
+            </p>
+          </form>
+        </div>
+
+        <!-- TASK LIST -->
+        <div class="bg-white rounded-3xl p-6 border border-[#EFE8DE] shadow-sm">
+          <div class="flex items-center justify-between mb-4 pb-2 border-b border-[#F4EDE4]">
+            <h3 class="font-heading text-base font-bold text-[#231F20]">Active Task Radar</h3>
+            <span class="text-xs text-[#786C5E] font-medium" id="taskStatsPill">3 Tasks remaining</span>
+          </div>
+
+          <div id="tasksListContainer" class="space-y-3">
+            <!-- Dynamically injected -->
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT COLUMN: DISTRACTION BLOCKER & SHARMA GARI ABBAYI COMPARATOR -->
+      <div class="space-y-6">
+
+        <!-- DISTRACTION SITE BLOCKER FIREWALL (USER ASKED) -->
+        <div class="bg-white rounded-3xl p-6 border border-[#EFE8DE] shadow-sm">
+          <div class="flex items-center justify-between mb-3">
+            <div>
+              <span class="text-[10px] font-mono-code uppercase font-bold text-rose-700 tracking-wider">Mummy Firewall</span>
+              <h3 class="font-heading text-base font-bold text-[#231F20]">Distraction Site Blocker</h3>
+            </div>
+            <span class="text-2xl">🛡️</span>
+          </div>
+          <p class="text-xs text-[#786C5E] mb-4">
+            Pani chesetappudu ee sites open chesthe Amma screen lock vesi thidathadi!
           </p>
 
-          <!-- LEADER METRICS -->
-          <div class="flex flex-wrap items-center gap-2.5 mt-4 text-xs">
-            <div class="bg-white/80 border border-[#EADBCE] px-3 py-1.5 rounded-xl flex items-center gap-2 font-medium">
-              <span class="text-[#786C5E]">Floor Votes:</span>
-              <span id="leaderVotes" class="font-mono-code font-bold text-[#C85A17]">21</span>
-            </div>
-            <div class="bg-white/80 border border-[#EADBCE] px-3 py-1.5 rounded-xl flex items-center gap-2 font-medium">
-              <span class="text-[#786C5E]">Overall Rating:</span>
-              <span id="leaderRating" class="font-mono-code font-bold text-emerald-700">9.4 / 10</span>
-            </div>
-            <div class="bg-white/80 border border-[#EADBCE] px-3 py-1.5 rounded-xl flex items-center gap-2 font-medium">
-              <span class="text-[#786C5E]">Parking Reality:</span>
-              <span id="leaderParking" class="font-bold text-red-600">🚨 Bikes Only (Narrow Gully, No Cars)</span>
-            </div>
+          <div class="space-y-2 mb-4" id="blockedSitesList">
+            <!-- Injected -->
+          </div>
+
+          <!-- Add new blocked site -->
+          <div class="flex gap-2">
+            <input 
+              id="newBlockedSite" 
+              type="text" 
+              placeholder="e.g. twitter.com / netflix.com" 
+              class="flex-1 bg-[#FAF7F2] border border-[#EAE1D5] rounded-xl px-3 py-2 text-xs text-[#231F20] focus:outline-none"
+            >
+            <button onclick="addCustomBlockedSite()" class="px-3 py-2 rounded-xl bg-rose-100 hover:bg-rose-200 text-rose-800 font-bold text-xs transition">
+              + Block
+            </button>
           </div>
         </div>
 
-        <!-- HERO BUTTONS -->
-        <div class="flex flex-col sm:flex-row lg:flex-col gap-2 shrink-0">
-          <button onclick="lockVerdictWithConfetti()" class="px-5 py-3 rounded-xl bg-[#C85A17] hover:bg-[#A94910] text-white font-extrabold text-xs tracking-wide transition flex items-center justify-center gap-2 shadow-md shadow-orange-900/10">
-            <span>🎉</span> Lock Verdict & Announce Winner
-          </button>
-          <button onclick="resetVotes()" class="px-4 py-2.5 rounded-xl bg-white/70 hover:bg-white border border-[#EADBCE] text-xs font-semibold text-[#786C5E] hover:text-[#231F20] transition">
-            Reset Floor Poll
-          </button>
-        </div>
-      </div>
-    </section>
-
-    <!-- INLINE NOMINATION FORM (USER ASKED: "homepage lo andariki vala place ni adige form kuda undali") -->
-    <section id="nominateSection" class="mb-10 bg-white border border-[#EFE8DE] rounded-2xl p-6 sm:p-7 shadow-sm">
-      <div class="flex items-start justify-between mb-4 pb-3 border-b border-[#F4EDE4]">
-        <div>
-          <span class="text-[11px] font-mono-code uppercase font-bold text-[#C85A17] tracking-wider">Secret Adda Submission</span>
-          <h2 class="font-serif-title text-xl font-bold text-[#231F20] mt-0.5">Nominate Your Secret Hyderabadi Spot</h2>
-          <p class="text-xs text-[#786C5E] mt-0.5">AI ki teliyani real local food adda ni rate chesi floor voting pool loki pampu.</p>
-        </div>
-        <span class="text-2xl">✍️</span>
-      </div>
-
-      <form onsubmit="handleInlineNomination(event)" class="space-y-4 text-xs">
-        <!-- Row 1: Name & Location & Distance -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-3.5">
-          <div class="md:col-span-1">
-            <label class="block font-bold text-[#42382E] mb-1">Spot Name</label>
-            <input required id="nomName" type="text" placeholder="e.g. Mohammadi Biryani / Iqbal Hotel" class="w-full bg-[#FAF7F2] border border-[#EAE1D5] rounded-xl px-3.5 py-2 text-[#231F20] focus:bg-white focus:outline-none focus:border-[#C85A17]">
+        <!-- "SHARMA GARI ABBAYI" GUILT-TRIP GENERATOR -->
+        <div class="bg-gradient-to-br from-[#FFFBF0] to-[#FFF6DC] border border-[#F2E5B8] rounded-3xl p-6 shadow-sm">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="text-xl">🏆</span>
+            <h3 class="font-heading text-base font-bold text-[#231F20]">"Sharma Gari Abbayi" Status</h3>
           </div>
-          <div>
-            <label class="block font-bold text-[#42382E] mb-1">Area / Landmark</label>
-            <input required id="nomArea" type="text" placeholder="e.g. Lakdikapul / Charminar" class="w-full bg-[#FAF7F2] border border-[#EAE1D5] rounded-xl px-3.5 py-2 text-[#231F20] focus:bg-white focus:outline-none focus:border-[#C85A17]">
+          <p class="text-xs text-[#635547] leading-relaxed mb-3">
+            Neighbour aunty abbayi em chesthunnado live update:
+          </p>
+          <div id="sharmaGariAbbayiFeed" class="bg-white/80 p-3.5 rounded-2xl border border-[#EBDCA8] text-xs font-semibold text-[#42382E] leading-relaxed">
+            "Vadu early morning 5 AM ki lechi coding chesthunnadu, 35 LPA package kottadu... Nuvvu inka phone scroll chesthunnava?"
           </div>
-          <div>
-            <label class="block font-bold text-[#42382E] mb-1">Distance from Venue (km)</label>
-            <input required id="nomDist" type="number" step="0.1" min="0.2" max="30" placeholder="e.g. 3.5" class="w-full bg-[#FAF7F2] border border-[#EAE1D5] rounded-xl px-3.5 py-2 text-[#231F20] focus:bg-white focus:outline-none focus:border-[#C85A17]">
-          </div>
-        </div>
-
-        <!-- Row 2: 4 Criteria Sliders / Inputs (Taste, Ambience, Service, Parking) -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 bg-[#FCFAF7] p-3.5 rounded-xl border border-[#F2ECE3]">
-          <div>
-            <label class="block font-bold text-[#42382E] mb-1">🍗 Taste (1-10)</label>
-            <input required id="nomTaste" type="number" min="1" max="10" value="9" class="w-full bg-white border border-[#E4D9CC] rounded-lg px-3 py-1.5 font-mono-code font-bold text-[#C85A17] focus:outline-none">
-          </div>
-          <div>
-            <label class="block font-bold text-[#42382E] mb-1">🪑 Ambience (1-10)</label>
-            <input required id="nomAmbience" type="number" min="1" max="10" value="7" class="w-full bg-white border border-[#E4D9CC] rounded-lg px-3 py-1.5 font-mono-code font-bold text-[#231F20] focus:outline-none">
-          </div>
-          <div>
-            <label class="block font-bold text-[#42382E] mb-1">⚡ Service (1-10)</label>
-            <input required id="nomService" type="number" min="1" max="10" value="8" class="w-full bg-white border border-[#E4D9CC] rounded-lg px-3 py-1.5 font-mono-code font-bold text-[#231F20] focus:outline-none">
-          </div>
-          <div>
-            <label class="block font-bold text-[#42382E] mb-1">🚗 Parking Ease (1-10)</label>
-            <input required id="nomParking" type="number" min="1" max="10" value="4" class="w-full bg-white border border-[#E4D9CC] rounded-lg px-3 py-1.5 font-mono-code font-bold text-red-600 focus:outline-none">
-          </div>
-        </div>
-
-        <!-- Row 3: Parking Reality & Slang Warning -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
-          <div>
-            <label class="block font-bold text-[#42382E] mb-1">Parking Ground Reality</label>
-            <input required id="nomParkingDesc" type="text" placeholder="e.g. Road tight, car theesthe traffic jam, only 2-wheelers" class="w-full bg-[#FAF7F2] border border-[#EAE1D5] rounded-xl px-3.5 py-2 text-[#231F20] focus:bg-white focus:outline-none focus:border-[#C85A17]">
-          </div>
-          <div>
-            <label class="block font-bold text-[#42382E] mb-1">Local Street Slang Warning (Traffic / Rule)</label>
-            <input required id="nomWarning" type="text" placeholder="e.g. 1:30 PM daatithe handi khali, police challan lu vestaru!" class="w-full bg-[#FAF7F2] border border-[#EAE1D5] rounded-xl px-3.5 py-2 text-[#231F20] focus:bg-white focus:outline-none focus:border-[#C85A17]">
-          </div>
-        </div>
-
-        <div class="flex justify-end pt-1">
-          <button type="submit" class="px-6 py-2.5 rounded-xl bg-[#C85A17] hover:bg-[#B34F12] text-white font-extrabold text-xs shadow-md transition flex items-center gap-2">
-            <span>✨</span> Publish to Event Voting Floor
+          <button onclick="refreshSharmaComparison()" class="mt-3 text-[11px] font-bold text-rose-700 hover:underline flex items-center gap-1">
+            <span>🔄</span> Inko Comparison Thiduthu Cheppu
           </button>
         </div>
-      </form>
-    </section>
 
-    <!-- FILTER & SEARCH BAR -->
-    <section class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
-      <!-- Distance Filter Pills -->
-      <div class="flex items-center gap-2 overflow-x-auto pb-1 md:pb-0">
-        <span class="text-xs font-mono-code uppercase font-bold text-[#786C5E] mr-1">Distance:</span>
-        <button onclick="setDistanceFilter('all')" data-dist="all" class="dist-pill px-3 py-1.5 rounded-xl text-xs font-bold pill-active transition">Anni (All)</button>
-        <button onclick="setDistanceFilter(2)" data-dist="2" class="dist-pill px-3 py-1.5 rounded-xl text-xs font-semibold pill-inactive hover:bg-[#FAF6F0] transition">&lt; 2 km (Walking)</button>
-        <button onclick="setDistanceFilter(5)" data-dist="5" class="dist-pill px-3 py-1.5 rounded-xl text-xs font-semibold pill-inactive hover:bg-[#FAF6F0] transition">&lt; 5 km (Bike)</button>
-        <button onclick="setDistanceFilter(10)" data-dist="10" class="dist-pill px-3 py-1.5 rounded-xl text-xs font-semibold pill-inactive hover:bg-[#FAF6F0] transition">&lt; 10 km (Drive)</button>
-      </div>
-
-      <!-- Search & Sort -->
-      <div class="flex items-center gap-3">
-        <div class="relative w-full md:w-64">
-          <input 
-            id="searchInput" 
-            type="text" 
-            placeholder="Search spot, area, or flavor..." 
-            oninput="renderSpots()" 
-            class="w-full bg-white border border-[#EAE1D5] rounded-xl pl-8 pr-3 py-2 text-xs text-[#231F20] placeholder-[#A09384] focus:outline-none focus:border-[#C85A17]"
-          >
-          <span class="absolute left-2.5 top-2.5 text-xs text-[#A09384]">🔍</span>
+        <!-- SOUND BOARD: AMMA CLASSIC DIALOGUES -->
+        <div class="bg-white rounded-3xl p-6 border border-[#EFE8DE] shadow-sm">
+          <h3 class="font-heading text-sm font-bold text-[#231F20] mb-3">Amma Signature Scoldings 🗣️</h3>
+          <div class="space-y-2 text-xs">
+            <button onclick="playMomDialogue('phone')" class="w-full text-left p-2.5 rounded-xl bg-[#FAF7F2] hover:bg-rose-50 border border-[#EAE1D5] font-semibold text-[#42382E] transition flex items-center justify-between">
+              <span>"Annitiki aa phone ae karanam!"</span>
+              <span class="text-xs text-rose-600">🔊</span>
+            </button>
+            <button onclick="playMomDialogue('sharma')" class="w-full text-left p-2.5 rounded-xl bg-[#FAF7F2] hover:bg-rose-50 border border-[#EAE1D5] font-semibold text-[#42382E] transition flex items-center justify-between">
+              <span>"Sharma gari abbayi ni chusi nerchuko!"</span>
+              <span class="text-xs text-rose-600">🔊</span>
+            </button>
+            <button onclick="playMomDialogue('tini')" class="w-full text-left p-2.5 rounded-xl bg-[#FAF7F2] hover:bg-rose-50 border border-[#EAE1D5] font-semibold text-[#42382E] transition flex items-center justify-between">
+              <span>"Tini kurchodam thappa em cheyavu!"</span>
+              <span class="text-xs text-rose-600">🔊</span>
+            </button>
+          </div>
         </div>
-        <select id="sortBy" onchange="renderSpots()" class="bg-white border border-[#EAE1D5] rounded-xl px-3 py-2 text-xs font-medium text-[#42382E] focus:outline-none">
-          <option value="votes">Top Floor Votes</option>
-          <option value="taste">Highest Taste Score</option>
-          <option value="service">Fastest Service</option>
-          <option value="parking">Best Parking</option>
-          <option value="distance">Nearest First</option>
-        </select>
-      </div>
-    </section>
 
-    <!-- CARDS GRID -->
-    <section id="spotsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-5">
-      <!-- Injected via JavaScript -->
-    </section>
+      </div>
+
+    </div>
 
   </main>
 
-  <!-- POPUP SLANG WARNING NOTIFICATION -->
-  <div id="slangToast" class="fixed bottom-6 right-6 max-w-sm bg-white border-2 border-red-500 rounded-2xl p-4 shadow-2xl z-50 transform translate-y-36 opacity-0 transition-all duration-300 pointer-events-none">
-    <div class="flex items-start gap-3">
-      <span class="text-2xl" id="slangIcon">🚨</span>
-      <div>
-        <div class="text-[10px] font-mono-code uppercase font-bold text-red-600 tracking-wider" id="slangBadge">HYDERABADI STREET WARNING</div>
-        <p class="text-xs text-[#231F20] mt-1 font-semibold leading-relaxed" id="slangMessage">
-          Ustaad, akkada car pettavante 1000 rupaye challan SMS ventane osthadi! Auto lo pondi saami.
-        </p>
+  <!-- POPUP: BLOCKED SITE / THEDA CHESINANDUKU SCREEN LOCK MODAL -->
+  <div id="siteBlockedModal" class="fixed inset-0 bg-black/85 backdrop-blur-lg z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl p-7 max-w-md w-full shadow-2xl border-4 border-red-500 text-center relative animate-pulse">
+      <div class="w-24 h-24 mx-auto rounded-full bg-red-100 border-2 border-red-300 flex items-center justify-center text-5xl mb-3">
+        🩴
+      </div>
+      <span class="text-[10px] font-mono-code uppercase font-bold text-red-600 tracking-wider bg-red-50 px-3 py-1 rounded-full border border-red-200">
+        AMMA SITE BLOCKED FIREWALL
+      </span>
+      <h3 class="font-heading text-2xl font-black text-red-700 mt-2">
+        "Orey! <span id="blockedSiteDomain">Instagram</span> enduku open chesav?!"
+      </h3>
+      <p id="blockedSiteScold" class="text-xs text-zinc-700 my-3 font-semibold leading-relaxed bg-red-50 p-3 rounded-2xl border border-red-200">
+        "Pani aipokunda reels chusthava?! Ippudu phone laakkoni switch off chesthe telusthundi! Ventane poyi pending tasks aipogottu!"
+      </p>
+
+      <div class="space-y-2 pt-2">
+        <button onclick="dismissBlockedSiteModal()" class="w-full py-3 rounded-2xl bg-red-600 hover:bg-red-700 text-white font-extrabold text-xs shadow-lg transition active:scale-95">
+          "Sorry Amma! Ventane pani chestha!" (Back to Tasks)
+        </button>
       </div>
     </div>
   </div>
 
-  <!-- MULTI-CRITERIA RATING MODAL (RATE SPOT ON DEMAND) -->
-  <div id="rateModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white border border-[#EFE8DE] rounded-3xl p-6 max-w-md w-full shadow-2xl">
-      <div class="flex items-center justify-between pb-3 border-b border-[#F4EDE4] mb-4">
-        <div>
-          <h3 id="rateModalSpotName" class="font-serif-title text-lg font-bold text-[#231F20]">Rate Spot</h3>
-          <p class="text-xs text-[#786C5E]">Provide your score to update the group ranking</p>
-        </div>
-        <button onclick="closeRateModal()" class="text-[#786C5E] hover:text-[#231F20] font-bold text-lg">✕</button>
-      </div>
-
-      <div class="space-y-4 text-xs">
-        <div>
-          <div class="flex justify-between font-bold text-[#42382E] mb-1">
-            <span>🍗 Taste & Meat Quality</span>
-            <span id="rateTasteVal" class="font-mono-code text-[#C85A17]">9 / 10</span>
-          </div>
-          <input type="range" min="1" max="10" value="9" id="sliderTaste" oninput="document.getElementById('rateTasteVal').innerText = this.value + ' / 10'" class="w-full accent-[#C85A17]">
-        </div>
-        <div>
-          <div class="flex justify-between font-bold text-[#42382E] mb-1">
-            <span>🪑 Ambience & Comfort</span>
-            <span id="rateAmbienceVal" class="font-mono-code text-[#C85A17]">7 / 10</span>
-          </div>
-          <input type="range" min="1" max="10" value="7" id="sliderAmbience" oninput="document.getElementById('rateAmbienceVal').innerText = this.value + ' / 10'" class="w-full accent-[#C85A17]">
-        </div>
-        <div>
-          <div class="flex justify-between font-bold text-[#42382E] mb-1">
-            <span>⚡ Service Speed</span>
-            <span id="rateServiceVal" class="font-mono-code text-[#C85A17]">8 / 10</span>
-          </div>
-          <input type="range" min="1" max="10" value="8" id="sliderService" oninput="document.getElementById('rateServiceVal').innerText = this.value + ' / 10'" class="w-full accent-[#C85A17]">
-        </div>
-        <div>
-          <div class="flex justify-between font-bold text-[#42382E] mb-1">
-            <span>🚗 Parking Convenience</span>
-            <span id="rateParkingVal" class="font-mono-code text-red-600">4 / 10</span>
-          </div>
-          <input type="range" min="1" max="10" value="4" id="sliderParking" oninput="document.getElementById('rateParkingVal').innerText = this.value + ' / 10'" class="w-full accent-[#C85A17]">
-        </div>
-      </div>
-
-      <div class="mt-6 flex justify-end gap-2">
-        <button onclick="closeRateModal()" class="px-4 py-2 rounded-xl text-xs text-[#786C5E] hover:bg-[#F8F4ED]">Cancel</button>
-        <button onclick="submitScoreUpdate()" class="px-5 py-2 rounded-xl bg-[#C85A17] hover:bg-[#B34F12] text-white font-bold text-xs shadow-md">Apply My Scores & Vote</button>
-      </div>
+  <!-- FLYING CHAPPAL ANIMATION CONTAINER -->
+  <div id="chappalOverlay" class="fixed inset-0 pointer-events-none z-50 hidden flex items-center justify-center">
+    <div class="text-8xl sm:text-9xl chappal-strike drop-shadow-2xl">
+      🩴
     </div>
   </div>
 
-  <!-- APPLICATION LOGIC SCRIPT -->
+  <!-- SCRIPT ENGINE -->
   <script>
-    // 1. DATASET: Secret Local Food Spots AI Doesn't Know About
-    let spots = [
-      {
-        id: 1,
-        name: "Hotel Rumaan",
-        area: "Mallepally",
-        dist: 3.2,
-        votes: 21,
-        price: 240,
-        taste: 9.6,
-        ambience: 6.2,
-        service: 8.5,
-        parkingScore: 3.2,
-        parkingStatus: "🚨 Zero Car Parking (Narrow Gully, Bikes Only)",
-        specialty: "Authentic Zafrani Mutton & Beef Dum, spicy bone-marrow gravy",
-        warning: "Bhai car theeyaku! Gully lo traffic SI seedha challan vestadu. Rapido lo ra!",
-        badge: "Underground Cult"
-      },
-      {
-        id: 2,
-        name: "Hotel Nayaab",
-        area: "Nayapul / Madina",
-        dist: 1.8,
-        votes: 18,
-        price: 260,
-        taste: 9.4,
-        ambience: 7.2,
-        service: 8.8,
-        parkingScore: 4.5,
-        parkingStatus: "⚠️ High Court busy road, paid parking 200m away",
-        specialty: "Pure heritage old-city saffron dhum biryani with delicate rice aromatics",
-        warning: "Madhyanam 1:30 PM ki handi khali aithadi miya! Late aite khali chai migulthadi.",
-        badge: "Heritage Dhum"
-      },
-      {
-        id: 3,
-        name: "Chicha's",
-        area: "Lakdikapul",
-        dist: 5.4,
-        votes: 15,
-        price: 350,
-        taste: 9.1,
-        ambience: 8.7,
-        service: 8.9,
-        parkingScore: 7.0,
-        parkingStatus: "🟢 Dedicated Valet parking on main road",
-        specialty: "Shaadi ki Biryani replica with Tala Hua Gosht & Khatti Dal",
-        warning: "AC section kosam 40 minutes wait cheyyala, lekapothe bayata dhum chudalsinde.",
-        badge: "Premium Shaadi Adda"
-      },
-      {
-        id: 4,
-        name: "Shah Ghouse",
-        area: "Tolichowki",
-        dist: 4.9,
-        votes: 14,
-        price: 290,
-        taste: 9.0,
-        ambience: 7.8,
-        service: 7.9,
-        parkingScore: 5.2,
-        parkingStatus: "🟡 Front-side valet crowded, service road choked",
-        specialty: "Fiery red masala chicken dhum with tender leg pieces & Irani chai",
-        warning: "Weekend evening aithe Panjagutta to Tolichowki traffic lo sagam praanam pothundi!",
-        badge: "Spicy Legend"
-      },
-      {
-        id: 5,
-        name: "Grand Hotel",
-        area: "Abids",
-        dist: 1.4,
-        votes: 11,
-        price: 250,
-        taste: 8.8,
-        ambience: 7.4,
-        service: 8.6,
-        parkingScore: 4.8,
-        parkingStatus: "⚠️ Abids main road no-parking towing zone",
-        specialty: "1935 vintage balanced masala, melt-in-mouth mutton",
-        warning: "Waiter bhai ni extra raita adagaku mama, serious expression isthadu!",
-        badge: "Historic Abids Icon"
-      },
-      {
-        id: 6,
-        name: "Cafe Bahar",
-        area: "Hyderguda",
-        dist: 2.3,
-        votes: 10,
-        price: 280,
-        taste: 8.9,
-        ambience: 6.9,
-        service: 7.7,
-        parkingScore: 3.9,
-        parkingStatus: "🚨 High towing risk near MLA quarters",
-        specialty: "Special Double Masala Chicken Biryani with spicy salan",
-        warning: "Footpath meeda bike pettina towing van theeskellipoddi, jagratha!",
-        badge: "Heavy Masala"
-      }
+    // 1. Initial State
+    let tasks = [
+      { id: 1, title: "Google Cloud Hackathon Submission Ready Cheyyadam", duration: 30, remaining: 18, status: "pending" },
+      { id: 2, title: "Resume & Portfolio Project Links Update", duration: 45, remaining: 40, status: "pending" },
+      { id: 3, title: "Room Clean Cheyyadam & Laundry Madathapettadam", duration: 20, remaining: 20, status: "pending" }
     ];
 
-    // 2. Funny Local Street Slang Warning Rules
-    const hyderabadSlangs = [
-      {
-        icon: "🚨",
-        badge: "PARKING CHALLAN HAZARD",
-        msg: "Ustaad, akkada car pettavante ₹1000 challan SMS ventane osthadi! Auto lo pondi saami."
-      },
-      {
-        icon: "🛑",
-        badge: "PANJAGUTTA TRAFFIC GRIDLOCK",
-        msg: "Baap re baap! Flyover meeda heavy traffic jam, meeru vellelopala pot meeda dum challaaripoddi!"
-      },
-      {
-        icon: "🥣",
-        badge: "RAITA FIGHT RULE",
-        msg: "Ekkuva raita adigi counter daggara godava pettukokandi mama, scene sitaram aithadi!"
-      },
-      {
-        icon: "⏳",
-        badge: "HANDI KHATAM AYIPOYINDI",
-        msg: "Kya miya! Intha late chesaru? Handi lo khali bokka lu matrame migilayi, vere adda chusko!"
-      },
-      {
-        icon: "🚇",
-        badge: "METRO SMART MOVE",
-        msg: "Car theesthe petrol bokka traffic shock! Ameerpet nunchi Metro ekki seedha spot ki poye plan cheyyandi."
-      }
+    let blockedSites = [
+      { domain: "instagram.com", name: "Instagram Reels", blockedCount: 14 },
+      { domain: "youtube.com", name: "YouTube Shorts", blockedCount: 9 },
+      { domain: "twitter.com", name: "X / Twitter", blockedCount: 6 },
+      { domain: "reddit.com", name: "Reddit Doomscrolling", blockedCount: 4 }
     ];
 
-    let currentDistanceFilter = 'all';
-    let activeRatingSpotId = null;
+    let angerLevel = 35; // 0 to 100
 
-    function triggerSlangAlert(custom = null) {
-      const slang = custom || hyderabadSlangs[Math.floor(Math.random() * hyderabadSlangs.length)];
-      const toast = document.getElementById('slangToast');
-      document.getElementById('slangIcon').innerText = slang.icon;
-      document.getElementById('slangBadge').innerText = slang.badge;
-      document.getElementById('slangMessage').innerText = slang.msg;
+    const teluguMomScolds = [
+      "Rey! Phone pakkana petti pani cheyyi ra! Sharma gari abbayi ippatike 3 offers kottadu!",
+      "Ilaage unte repu podduna em chesthav ra? Chuttu pakkala vallu em anukuntaru?!",
+      "Podduna 9 varaku padukuntav, night 2 varaku phone lo em peekuthunnav ra?!",
+      "Ee roju ee tasks aipokapothe intlo nunchi bayatiki pampistha, choosthu undu!",
+      "Annitiki aa phone ae karanam! Daanni nillallo munchithe gaani buddhi raadhu!",
+      "Chappal theestha inka! Panulu eppudu aipothayi ani adigithe inka 5 mins antav!"
+    ];
 
-      toast.classList.remove('translate-y-36', 'opacity-0');
-      toast.classList.add('translate-y-0', 'opacity-100');
+    const sharmaComparisons = [
+      "Sharma gari abbayi US MS interview crack chesadu, nuvvu inka bedroom lo ceiling fan chusthunnav!",
+      "Pakkinti Suresh morning 5 AM lechi 100 LeetCode problems solve chesadu, nuvvu Instagram lo memes chusthunnav!",
+      "Sharma gari pillalu holiday roju kuda coding nerchukuntunnaru, nuvvu laptop meeda head petti nidrapothunnav!",
+      "Vadu ippatike 35 LPA package tho join ayyadu, nuvvu inka basic task finish cheyadaniki 2 hours theesukuntunnav!"
+    ];
 
-      setTimeout(() => {
-        toast.classList.remove('translate-y-0', 'opacity-100');
-        toast.classList.add('translate-y-36', 'opacity-0');
-      }, 4500);
-    }
-
-    function quickVote(id, delta) {
-      const spot = spots.find(s => s.id === id);
-      if (!spot) return;
-
-      if (spot.votes + delta < 0) {
-        triggerSlangAlert({
-          icon: "🤦‍♂️",
-          badge: "NEGATIVE VOTE BLOCKED",
-          msg: "Abba negative votes endi miya? Biryani meeda intha kopam unte ela!"
-        });
-        return;
+    // Speech Synthesis for Telugu Mom Accent Voice
+    function speakTeluguMom(text) {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.rate = 1.05;
+        utterance.pitch = 1.25; // Higher pitch for typical assertive Indian mom tone
+        utterance.lang = 'te-IN'; // Telugu India locale, falls back gracefully
+        window.speechSynthesis.speak(utterance);
       }
-
-      spot.votes += delta;
-      saveSpotsToStorage();
-      if (Math.random() > 0.6) {
-        triggerSlangAlert();
-      }
-      renderSpots();
     }
 
-    function openRateModal(id) {
-      activeRatingSpotId = id;
-      const spot = spots.find(s => s.id === id);
-      document.getElementById('rateModalSpotName').innerText = `Rate ${spot.name} (${spot.area})`;
-      document.getElementById('sliderTaste').value = Math.round(spot.taste);
-      document.getElementById('rateTasteVal').innerText = Math.round(spot.taste) + " / 10";
-      document.getElementById('sliderAmbience').value = Math.round(spot.ambience);
-      document.getElementById('rateAmbienceVal').innerText = Math.round(spot.ambience) + " / 10";
-      document.getElementById('sliderService').value = Math.round(spot.service);
-      document.getElementById('rateServiceVal').innerText = Math.round(spot.service) + " / 10";
-      document.getElementById('sliderParking').value = Math.round(spot.parkingScore);
-      document.getElementById('rateParkingVal').innerText = Math.round(spot.parkingScore) + " / 10";
+    // 2. Render Functions
+    function renderTasks() {
+      const container = document.getElementById('tasksListContainer');
+      const pending = tasks.filter(t => t.status === 'pending');
+      document.getElementById('pendingTaskCount').innerText = pending.length;
+      document.getElementById('taskStatsPill').innerText = `${pending.length} Tasks Remaining`;
 
-      document.getElementById('rateModal').classList.remove('hidden');
-    }
-
-    function closeRateModal() {
-      document.getElementById('rateModal').classList.add('hidden');
-      activeRatingSpotId = null;
-    }
-
-    function submitScoreUpdate() {
-      if (!activeRatingSpotId) return;
-      const spot = spots.find(s => s.id === activeRatingSpotId);
-      const taste = parseFloat(document.getElementById('sliderTaste').value);
-      const ambience = parseFloat(document.getElementById('sliderAmbience').value);
-      const service = parseFloat(document.getElementById('sliderService').value);
-      const parking = parseFloat(document.getElementById('sliderParking').value);
-
-      spot.taste = Number(((spot.taste * 0.7) + (taste * 0.3)).toFixed(1));
-      spot.ambience = Number(((spot.ambience * 0.7) + (ambience * 0.3)).toFixed(1));
-      spot.service = Number(((spot.service * 0.7) + (service * 0.3)).toFixed(1));
-      spot.parkingScore = Number(((spot.parkingScore * 0.7) + (parking * 0.3)).toFixed(1));
-      spot.votes += 1;
-
-      closeRateModal();
-      renderSpots();
-
-      triggerSlangAlert({
-        icon: "🔥",
-        badge: "RATING COUNTED",
-        msg: `Zabardast! ${spot.name} scores floor ranking lo live update ayyayi!`
-      });
-    }
-
-    function setDistanceFilter(dist) {
-      currentDistanceFilter = dist;
-      document.querySelectorAll('.dist-pill').forEach(btn => {
-        if (btn.getAttribute('data-dist') == dist) {
-          btn.className = "dist-pill px-3 py-1.5 rounded-xl text-xs font-bold pill-active transition";
-        } else {
-          btn.className = "dist-pill px-3 py-1.5 rounded-xl text-xs font-semibold pill-inactive hover:bg-[#FAF6F0] transition";
-        }
-      });
-      renderSpots();
-    }
-
-    function getCompositeScore(s) {
-      return ((s.taste * 0.5) + (s.service * 0.2) + (s.ambience * 0.15) + (s.parkingScore * 0.15)).toFixed(1);
-    }
-
-    function renderSpots() {
-      const search = (document.getElementById('searchInput').value || '').toLowerCase();
-      const sortBy = document.getElementById('sortBy').value;
-      const grid = document.getElementById('spotsGrid');
-
-      let filtered = spots.filter(s => {
-        const matchesSearch = s.name.toLowerCase().includes(search) || s.area.toLowerCase().includes(search) || s.specialty.toLowerCase().includes(search);
-        const matchesDist = currentDistanceFilter === 'all' || s.dist <= parseFloat(currentDistanceFilter);
-        return matchesSearch && matchesDist;
-      });
-
-      filtered.sort((a, b) => {
-        if (sortBy === 'votes') return b.votes - a.votes;
-        if (sortBy === 'taste') return b.taste - a.taste;
-        if (sortBy === 'service') return b.service - a.service;
-        if (sortBy === 'parking') return b.parkingScore - a.parkingScore;
-        if (sortBy === 'distance') return a.dist - b.dist;
-        return 0;
-      });
-
-      // Update Hero consensus winner
-      const winner = spots.slice().sort((a, b) => b.votes - a.votes)[0];
-      if (winner) {
-        document.getElementById('leaderTitle').innerText = `${winner.name} (${winner.area}) 👑`;
-        document.getElementById('leaderDesc').innerText = `Leading room consensus with ${winner.votes} votes. "${winner.specialty}"`;
-        document.getElementById('leaderVotes').innerText = winner.votes;
-        document.getElementById('leaderRating').innerText = `${getCompositeScore(winner)} / 10`;
-        document.getElementById('leaderParking').innerText = winner.parkingStatus;
-      }
-
-      if (filtered.length === 0) {
-        grid.innerHTML = `
-          <div class="col-span-full py-12 text-center food-card rounded-2xl p-6">
-            <span class="text-3xl block mb-2">🍽️</span>
-            <p class="text-sm font-bold text-[#42382E]">Spot dorakaledu ustaad!</p>
-            <p class="text-xs text-[#827568] mt-1">Paina unna Nominate form dwara mee secret spot ni direct ga add cheyyandi.</p>
+      if (tasks.length === 0) {
+        container.innerHTML = `
+          <div class="py-10 text-center text-zinc-400">
+            <span class="text-4xl block mb-2">🎉</span>
+            <p class="text-sm font-bold text-zinc-700">Anni tasks aipoyayi!</p>
+            <p class="text-xs text-zinc-500">Amma ippudu ninnu em anadu, happy ga unnaaru!</p>
           </div>
         `;
         return;
       }
 
-      grid.innerHTML = filtered.map((s, index) => {
-        const isLeading = s.id === winner?.id;
-        const comp = getCompositeScore(s);
-
+      container.innerHTML = tasks.map(t => {
+        const isDone = t.status === 'done';
         return `
-          <div class="food-card rounded-2xl p-5 sm:p-6 transition-all flex flex-col justify-between ${isLeading ? 'ring-2 ring-[#C85A17]/40 bg-[#FFFDF9]' : ''}">
-            <div>
-              <!-- HEADER -->
-              <div class="flex items-start justify-between gap-3 mb-3">
-                <div>
-                  <div class="flex items-center gap-2">
-                    <span class="text-[11px] font-mono-code px-2 py-0.5 rounded-md ${isLeading ? 'bg-[#C85A17] text-white font-bold' : 'bg-[#F2ECE3] text-[#54483C] font-semibold'}">
-                      #${index + 1}
-                    </span>
-                    <span class="text-[10px] uppercase font-bold text-[#C85A17] bg-[#FFF2E5] border border-[#FCDCC0] px-2 py-0.5 rounded-full">
-                      ${s.badge}
-                    </span>
-                    ${s.matchScore ? `
-                    <span class="text-[10px] font-mono-code font-bold text-emerald-800 bg-emerald-100 border border-emerald-300 px-2 py-0.5 rounded-full animate-pulse">
-                      ✨ ${s.matchScore}% Group Match
-                    </span>` : ''}
-                  </div>
-                  <h3 class="font-serif-title text-xl font-bold text-[#231F20] mt-1.5">${s.name}</h3>
-                  <div class="text-xs font-semibold text-[#786C5E] mt-0.5 flex items-center gap-2">
-                    <span>📍 ${s.area}</span>
-                    <span>•</span>
-                    <span class="text-[#231F20] font-bold">${s.dist} km</span>
-                    <span>•</span>
-                    <span>₹${s.price}/person</span>
-                  </div>
+          <div class="p-4 rounded-2xl border ${isDone ? 'bg-emerald-50/50 border-emerald-200 opacity-60' : 'bg-white border-[#EFE8DE] shadow-2xs'} flex items-center justify-between gap-3 transition-all">
+            <div class="flex items-center gap-3">
+              <button onclick="toggleTaskStatus(${t.id})" class="w-6 h-6 rounded-lg border-2 ${isDone ? 'bg-emerald-600 border-emerald-600 text-white' : 'border-zinc-300 hover:border-rose-500'} flex items-center justify-center text-xs font-bold transition">
+                ${isDone ? '✓' : ''}
+              </button>
+              <div>
+                <h4 class="text-xs font-bold ${isDone ? 'line-through text-zinc-400' : 'text-zinc-900'}">${t.title}</h4>
+                <div class="text-[11px] text-zinc-500 font-medium flex items-center gap-2 mt-0.5">
+                  <span class="font-mono-code">⏳ ${t.remaining} mins left</span>
+                  <span>•</span>
+                  <span>Target: ${t.duration} mins</span>
                 </div>
-
-                <!-- LIVE VOTE COUNTER -->
-                <div class="flex items-center bg-[#FDFBF7] border border-[#EBE3D8] rounded-xl p-1 shadow-sm">
-                  <button onclick="quickVote(${s.id}, -1)" class="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-white text-[#786C5E] font-bold transition text-xs">-</button>
-                  <span class="px-2.5 font-mono-code font-bold text-[#C85A17] text-sm min-w-[28px] text-center">${s.votes}</span>
-                  <button onclick="quickVote(${s.id}, 1)" class="w-7 h-7 flex items-center justify-center rounded-lg bg-[#C85A17] hover:bg-[#B34F12] text-white font-bold transition text-xs shadow-sm">+</button>
-                </div>
-              </div>
-
-              <!-- 4-CRITERIA METRICS (Taste, Ambience, Service, Parking) -->
-              <div class="grid grid-cols-2 gap-2.5 my-3.5 bg-[#FAF7F2] p-3 rounded-xl border border-[#F0E8DC] text-[11px]">
-                <div>
-                  <div class="flex justify-between font-medium text-[#54483C] mb-1">
-                    <span>🍗 Taste (Dhum):</span>
-                    <span class="font-mono-code font-bold text-[#C85A17]">${s.taste}/10</span>
-                  </div>
-                  <div class="meter-bg"><div class="bg-[#C85A17] h-full rounded-full" style="width: ${s.taste * 10}%"></div></div>
-                </div>
-                <div>
-                  <div class="flex justify-between font-medium text-[#54483C] mb-1">
-                    <span>⚡ Service Speed:</span>
-                    <span class="font-mono-code font-bold text-emerald-700">${s.service}/10</span>
-                  </div>
-                  <div class="meter-bg"><div class="bg-emerald-600 h-full rounded-full" style="width: ${s.service * 10}%"></div></div>
-                </div>
-                <div class="mt-1">
-                  <div class="flex justify-between font-medium text-[#54483C] mb-1">
-                    <span>🪑 Ambience:</span>
-                    <span class="font-mono-code font-bold text-[#231F20]">${s.ambience}/10</span>
-                  </div>
-                  <div class="meter-bg"><div class="bg-amber-600 h-full rounded-full" style="width: ${s.ambience * 10}%"></div></div>
-                </div>
-                <div class="mt-1">
-                  <div class="flex justify-between font-medium text-[#54483C] mb-1">
-                    <span>🚗 Parking Ease:</span>
-                    <span class="font-mono-code font-bold ${s.parkingScore < 5 ? 'text-red-600' : 'text-emerald-700'}">${s.parkingScore}/10</span>
-                  </div>
-                  <div class="meter-bg"><div class="${s.parkingScore < 5 ? 'bg-red-500' : 'bg-emerald-600'} h-full rounded-full" style="width: ${s.parkingScore * 10}%"></div></div>
-                </div>
-              </div>
-
-              <!-- PARKING GROUND STATUS -->
-              <div class="text-[11px] text-[#42382E] bg-white border border-[#EFE8DE] p-2.5 rounded-xl mb-2 flex items-center gap-1.5 font-medium shadow-2xs">
-                <span class="shrink-0 text-xs">🚗</span>
-                <span class="truncate"><strong>Parking Reality:</strong> ${s.parkingStatus}</span>
-              </div>
-
-              <!-- LOCAL STREET SLANG WARNING -->
-              <div class="text-[11px] text-red-900 bg-red-50/80 border border-red-200 p-2.5 rounded-xl flex items-start gap-1.5 leading-relaxed">
-                <span class="shrink-0 text-xs">⚠️</span>
-                <span><strong class="text-red-700">Slang Rule:</strong> ${s.warning}</span>
               </div>
             </div>
 
-            <!-- FOOTER -->
-            <div class="mt-4 pt-3 border-t border-[#F0E8DC] flex items-center justify-between text-xs gap-2">
-              <span class="font-mono-code text-[#786C5E] text-[11px]">Overall: <strong class="text-[#231F20]">${comp}/10</strong></span>
-              <div class="flex items-center gap-1.5">
-                <button onclick="copyFriendExcuse('${s.name}')" class="px-2.5 py-1.5 rounded-lg bg-[#FFF2E5] hover:bg-[#FFE3C7] text-[#C85A17] font-semibold text-[11px] border border-[#FCDCC0] transition flex items-center gap-1">
-                  <span>💬</span> Convince Friend
+            <div class="flex items-center gap-2">
+              ${!isDone ? `
+                <button onclick="procrastinatePenalty(${t.id})" class="px-2.5 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 text-[11px] font-bold transition">
+                  Delay (+Amma Anger)
                 </button>
-                <button onclick="openRateModal(${s.id})" class="px-2.5 py-1.5 rounded-lg bg-[#FAF4EB] hover:bg-[#F3E8D7] text-[#C85A17] font-bold text-[11px] border border-[#ECDDC8] transition">
-                  Rate ★
-                </button>
-              </div>
+              ` : `
+                <span class="text-xs font-bold text-emerald-700">Aipoyindi! 🌟</span>
+              `}
+              <button onclick="deleteTask(${t.id})" class="text-zinc-400 hover:text-red-500 text-sm px-1 font-bold">✕</button>
             </div>
           </div>
         `;
       }).join('');
     }
 
-    // Handle Inline Nomination Form
-    function handleInlineNomination(e) {
+    function renderBlockedSites() {
+      const container = document.getElementById('blockedSitesList');
+      container.innerHTML = blockedSites.map((s, idx) => `
+        <div class="flex items-center justify-between p-2.5 rounded-xl bg-[#FAF7F2] border border-[#EAE1D5] text-xs">
+          <div class="flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-red-500"></span>
+            <span class="font-bold text-zinc-800">${s.name}</span>
+            <span class="text-[10px] text-zinc-400 font-mono-code font-semibold">(${s.domain})</span>
+          </div>
+          <button onclick="testDistractionBlock('${s.domain}')" class="px-2 py-0.5 rounded-md bg-red-50 hover:bg-red-100 text-red-700 font-bold text-[10px] border border-red-200">
+            Simulate Click
+          </button>
+        </div>
+      `).join('');
+    }
+
+    // 3. User Interactions
+    function handleAddTask(e) {
       e.preventDefault();
-      const name = document.getElementById('nomName').value.trim();
-      const area = document.getElementById('nomArea').value.trim();
-      const dist = parseFloat(document.getElementById('nomDist').value);
-      const taste = parseFloat(document.getElementById('nomTaste').value);
-      const ambience = parseFloat(document.getElementById('nomAmbience').value);
-      const service = parseFloat(document.getElementById('nomService').value);
-      const parking = parseFloat(document.getElementById('nomParking').value);
-      const parkingDesc = document.getElementById('nomParkingDesc').value.trim();
-      const warning = document.getElementById('nomWarning').value.trim();
+      const title = document.getElementById('taskTitle').value.trim();
+      const duration = parseInt(document.getElementById('taskDuration').value);
 
-      const newId = Date.now();
-      spots.unshift({
-        id: newId,
-        name: name,
-        area: area,
-        dist: dist,
-        votes: 1,
-        price: 260,
-        taste: taste,
-        ambience: ambience,
-        service: service,
-        parkingScore: parking,
-        parkingStatus: parkingDesc,
-        specialty: "Floor Attendee Secret Recommendation",
-        warning: warning,
-        badge: "Attendee Nominated"
+      tasks.unshift({
+        id: Date.now(),
+        title: title,
+        duration: duration,
+        remaining: duration,
+        status: "pending"
       });
 
-      e.target.reset();
-      renderSpots();
+      document.getElementById('taskTitle').value = '';
+      renderTasks();
 
-      confetti({ particleCount: 70, spread: 80, origin: { y: 0.6 } });
-      triggerSlangAlert({
-        icon: "🎉",
-        badge: "NEW SPOT ON FLOOR",
-        msg: `Bhai! "${name}" spot live poll lo include aindi with 1 initial vote!`
-      });
-
-      // Scroll to cards
-      document.getElementById('spotsGrid').scrollIntoView({ behavior: 'smooth' });
+      // Amma response
+      angerLevel = Math.max(10, angerLevel - 5);
+      updateMomMood();
+      triggerMomToast("Amma Approved", `"Sare, ${title} anav ga... eppatlo aipothundo choostha!"`);
     }
 
-    function lockVerdictWithConfetti() {
-      const winner = spots.slice().sort((a, b) => b.votes - a.votes)[0];
-      confetti({
-        particleCount: 160,
-        spread: 90,
-        origin: { y: 0.6 }
-      });
-      triggerSlangAlert({
-        icon: "👑",
-        badge: "FINAL ROOM VERDICT LOCKED",
-        msg: `Room consensus fixed on ${winner.name} (${winner.area})! Sab log gaadi start karo, biryani aag laga dengi! 🔥`
-      });
-    }
+    function toggleTaskStatus(id) {
+      const t = tasks.find(x => x.id === id);
+      if (!t) return;
 
-    function resetVotes() {
-      spots.forEach(s => s.votes = 0);
-      renderSpots();
-      triggerSlangAlert({
-        icon: "🔄",
-        badge: "POLL RESET",
-        msg: "Event floor voting zero chesam. Kothaga votes veyyandi ustaad!"
-      });
-    }
-
-    // UNIQUE FEATURE 1: Argument Killer Toss
-    function openFightModal() {
-      const selectA = document.getElementById('tossSpotA');
-      const selectB = document.getElementById('tossSpotB');
-
-      if (selectA && selectB) {
-        selectA.innerHTML = spots.map((s, idx) => `<option value="${s.id}" ${idx === 0 ? 'selected' : ''}>${s.name} (${s.area})</option>`).join('');
-        selectB.innerHTML = spots.map((s, idx) => `<option value="${s.id}" ${idx === 1 ? 'selected' : ''}>${s.name} (${s.area})</option>`).join('');
+      if (t.status === 'pending') {
+        t.status = 'done';
+        angerLevel = Math.max(0, angerLevel - 25);
+        confetti({ particleCount: 90, spread: 70, origin: { y: 0.6 } });
+        triggerMomToast("Amma Santhosham!", `"Choodu! Chesukovachu kada ila? Repatnunchi roju ilaage cheyyi!"`);
+      } else {
+        t.status = 'pending';
+        angerLevel = Math.min(100, angerLevel + 15);
       }
 
-      document.getElementById('tossResult').innerText = "Toss button nokkandi, true 50-50 verdict osthadi!";
-      document.getElementById('fightModal').classList.remove('hidden');
+      updateMomMood();
+      renderTasks();
     }
 
-    function closeFightModal() {
-      document.getElementById('fightModal').classList.add('hidden');
+    function deleteTask(id) {
+      tasks = tasks.filter(x => x.id !== id);
+      renderTasks();
     }
 
-    function spinHandiToss() {
-      const coin = document.getElementById('tossCoin');
-      const res = document.getElementById('tossResult');
-      const btn = document.getElementById('tossActionBtn');
-      const emoji = document.getElementById('coinEmoji');
-      const label = document.getElementById('coinLabel');
+    function procrastinatePenalty(id) {
+      angerLevel = Math.min(100, angerLevel + 25);
+      updateMomMood();
+      throwFlyingChappal();
+      triggerMomToast("CHAPPAL WARNING!", `"Inka delay chesthe pelli chesi pakkaki pampistha, em anukuntunnav!"`);
+    }
 
-      const spotAId = parseInt(document.getElementById('tossSpotA').value);
-      const spotBId = parseInt(document.getElementById('tossSpotB').value);
+    function addCustomBlockedSite() {
+      const input = document.getElementById('newBlockedSite');
+      const val = input.value.trim().toLowerCase();
+      if (!val) return;
 
-      const spotA = spots.find(s => s.id === spotAId) || spots[0];
-      const spotB = spots.find(s => s.id === spotBId) || spots[1] || spots[0];
+      blockedSites.push({
+        domain: val,
+        name: val.split('.')[0].toUpperCase(),
+        blockedCount: 0
+      });
+      input.value = '';
+      renderBlockedSites();
+      triggerMomToast("Site Blocked", `"${val} ni block list lo pettesa, open chesthe nene unna!"`);
+    }
 
-      if (spotA.id === spotB.id) {
-        res.innerHTML = `<span class="text-amber-700">Miya! Rendu addas okkate pettaru! Iddaru vere vere spots pettandi.</span>`;
+    // 4. Distraction Firewall / Screen Lock
+    function testDistractionBlock(domain) {
+      document.getElementById('blockedSiteDomain').innerText = domain;
+      const modal = document.getElementById('siteBlockedModal');
+      modal.classList.remove('hidden');
+
+      // Amma Rage Sound & Screen Shake
+      document.body.classList.add('shake-rage');
+      setTimeout(() => document.body.classList.remove('shake-rage'), 1200);
+
+      angerLevel = Math.min(100, angerLevel + 30);
+      updateMomMood();
+      throwFlyingChappal();
+
+      const scold = `Rey! ${domain} enduku open chesav?! Pani aipokunda scroll chesthava? Phone switch off chestha!`;
+      document.getElementById('blockedSiteScold').innerText = `"${scold}"`;
+      speakTeluguMom(scold);
+    }
+
+    function dismissBlockedSiteModal() {
+      document.getElementById('siteBlockedModal').classList.add('hidden');
+    }
+
+    // 5. Flying Chappal Strike
+    function throwFlyingChappal() {
+      const overlay = document.getElementById('chappalOverlay');
+      overlay.classList.remove('hidden');
+      setTimeout(() => overlay.classList.add('hidden'), 900);
+    }
+
+    // 6. Update Mom Mood and Dialect
+    function updateMomMood() {
+      const badge = document.getElementById('momMoodBadge');
+      const angerText = document.getElementById('angerPercentage');
+      const risk = document.getElementById('chappalRisk');
+      const title = document.getElementById('momDialectTitle');
+      const avatar = document.getElementById('bigMomAvatar');
+      const hero = document.getElementById('ammaHeroCard');
+
+      angerText.innerText = `${angerLevel}% (${angerLevel > 70 ? 'Extreme Kopam' : angerLevel > 40 ? 'Irritated' : 'Calm'})`;
+
+      if (angerLevel >= 75) {
+        badge.className = "text-[10px] font-mono-code uppercase px-2 py-0.5 rounded-full bg-red-100 text-red-800 font-bold border border-red-300";
+        badge.innerText = "🔴 Mood: Maha Kopam (Rage)";
+        risk.innerText = "🚨 HIGH (Chappal in Air)";
+        risk.className = "font-bold text-red-600";
+        avatar.innerText = "😡";
+        title.innerText = `"Chappal theeyala ippudu?! Pettey phone!"`;
+        hero.className = "mb-8 rounded-3xl p-6 sm:p-8 bg-gradient-to-br from-red-100 via-rose-50 to-orange-100 border-2 border-red-400 shadow-md transition-all duration-500";
+      } else if (angerLevel >= 40) {
+        badge.className = "text-[10px] font-mono-code uppercase px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 font-bold border border-amber-300";
+        badge.innerText = "🟡 Mood: Chiraaku (Annoyed)";
+        risk.innerText = "⚠️ Medium";
+        risk.className = "font-bold text-amber-600";
+        avatar.innerText = "🤨";
+        title.innerText = `"Rey! Phone pakkana petti pani cheyyi ra!"`;
+        hero.className = "mb-8 rounded-3xl p-6 sm:p-8 bg-gradient-to-br from-amber-50 via-orange-50 to-rose-50 border-2 border-amber-300 shadow-sm transition-all duration-500";
+      } else {
+        badge.className = "text-[10px] font-mono-code uppercase px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-bold border border-emerald-200";
+        badge.innerText = "🟢 Mood: Shantam (Peaceful)";
+        risk.innerText = "🟢 None (Tiffins Ready)";
+        risk.className = "font-bold text-emerald-700";
+        avatar.innerText = "👵";
+        title.innerText = `"Manchi abbayi laga panulu aipogottuko naanna!"`;
+        hero.className = "mb-8 rounded-3xl p-6 sm:p-8 bg-gradient-to-br from-[#FFF8F6] via-[#FFF3EF] to-[#FFEBE5] border-2 border-rose-200 shadow-sm transition-all duration-500";
+      }
+    }
+
+    function calmAmmaDown() {
+      angerLevel = Math.max(10, angerLevel - 20);
+      updateMomMood();
+      triggerMomToast("Amma Compromise", `"Sare! Correct ga 10 mins lo aipokapothe choodu em chesthano!"`);
+      speakTeluguMom("Correct ga 10 mins lo aipokapothe choodu!");
+    }
+
+    function triggerMomCall() {
+      const randomScold = teluguMomScolds[Math.floor(Math.random() * teluguMomScolds.length)];
+      document.getElementById('momLiveScold').innerText = `"${randomScold}"`;
+      triggerMomToast("Incoming Mom Call 📞", randomScold);
+      speakTeluguMom(randomScold);
+      throwFlyingChappal();
+    }
+
+    function refreshSharmaComparison() {
+      const comp = sharmaComparisons[Math.floor(Math.random() * sharmaComparisons.length)];
+      document.getElementById('sharmaGariAbbayiFeed').innerText = `"${comp}"`;
+      speakTeluguMom(comp);
+    }
+
+    function playMomDialogue(type) {
+      if (type === 'phone') {
+        const text = "Annitiki aa phone ae karanam! Poddununchi daantlo em chusthavo em peekuthavo!";
+        speakTeluguMom(text);
+        triggerMomToast("Amma Voice", `"${text}"`);
+      } else if (type === 'sharma') {
+        const text = "Sharma gari abbayi ni chusi nerchuko! Vadu 35 LPA package tho settle ayyadu!";
+        speakTeluguMom(text);
+        triggerMomToast("Amma Voice", `"${text}"`);
+      } else {
+        const text = "Tini kurchodam thappa okka pani kuda sarriga cheyavu!";
+        speakTeluguMom(text);
+        triggerMomToast("Amma Voice", `"${text}"`);
+      }
+    }
+
+    function aiBreakdownTask() {
+      const pending = tasks.find(t => t.status === 'pending');
+      if (!pending) {
+        alert("Pending tasks em levu naanna!");
         return;
       }
-
-      btn.disabled = true;
-      btn.innerText = "Tossing in the air...";
-      coin.style.transform = "rotateY(1800deg) scale(1.15)";
-      res.innerText = "Dum Handi toss avthundi...";
-
-      // True 50-50 flip using cryptographic random
-      const cryptoRandom = window.crypto ? window.crypto.getRandomValues(new Uint32Array(1))[0] / 4294967296 : Math.random();
-      const isHeads = cryptoRandom < 0.5;
-
-      const winner = isHeads ? spotA : spotB;
-      const loser = isHeads ? spotB : spotA;
-
-      setTimeout(() => {
-        coin.style.transform = isHeads ? "rotateY(0deg) scale(1)" : "rotateY(180deg) scale(1)";
-        emoji.innerText = isHeads ? "🍗" : "🍚";
-        label.innerText = isHeads ? "HEADS" : "TAILS";
-
-        // Give winning spot +1 live vote
-        winner.votes += 1;
-        saveSpotsToStorage();
-        renderSpots();
-
-        res.innerHTML = `
-          <div class="space-y-1">
-            <span class="text-emerald-700 font-extrabold text-sm block">👑 ${winner.name} (${isHeads ? 'Heads' : 'Tails'}) Gelichindi!</span>
-            <span class="text-[11px] text-zinc-600 font-medium block">
-              ${loser.name} party vallu silent aipondi! ${winner.name} locked and +1 vote added!
-            </span>
-          </div>
-        `;
-
-        btn.disabled = false;
-        btn.innerText = "Toss Again 🎲";
-        confetti({ particleCount: 90, spread: 75, origin: { y: 0.6 } });
-        triggerSlangAlert({
-          icon: isHeads ? "🍗" : "🍚",
-          badge: "TOSS VERDICT LOCKED",
-          msg: `Toss Gelichindi: ${winner.name}! Sab log gaadi theeyandi, bill ${loser.name} supporter kattali!`
-        });
-      }, 1000);
+      const breakdownMsg = `Amma AI Advice for '${pending.title}':\n1. Phone switch off cheyyi (Next 25 mins)\n2. Table meedha water bottle pettuko\n3. First 5 mins lo intro start cheyyi!`;
+      alert(breakdownMsg);
     }
 
-    // UNIQUE FEATURE 2: Friend Convincer Slang Excuse Generator
-    const friendExcuses = [
-      "Miya, akkada Biryani tho paatu killer Paneer 65 and Butter Naan kuda untadi ani cheppu, silent ga vachestadu!",
-      "Ustaad, 'Nene bike drive chestha, petrol kuda nene poyistha' ani cheppu, 5 minutes lo ready aithadu!",
-      "Arey babu, 'Bill nenu split lo adjust chestha' ani dialogue kottu, ventane car ekki kurchuntadu!",
-      "Miya, 'Akkada vellaka Irani Chai and Osmania Biscuit treat naadhe' ani cheppu, double speed tho osthadu!",
-      "'Today only fresh Zafrani handi open chesaru, miss aite inko 6 months ilanti dum dorakadu' ani hype ivvu!"
-    ];
-
-    function copyFriendExcuse(spotName) {
-      const excuse = friendExcuses[Math.floor(Math.random() * friendExcuses.length)];
-      const fullText = `[For ${spotName}]: "${excuse}"`;
-      navigator.clipboard.writeText(fullText).then(() => {
-        triggerSlangAlert({
-          icon: "💬",
-          badge: "EXCUSE COPIED",
-          msg: `Convince Excuse copied: "${excuse}"`
-        });
-      });
+    function triggerMomToast(title, msg) {
+      const toast = document.createElement('div');
+      toast.className = "fixed bottom-6 right-6 max-w-sm bg-white border-2 border-rose-500 rounded-2xl p-4 shadow-2xl z-50 flex items-start gap-3 transition-all";
+      toast.innerHTML = `
+        <span class="text-2xl">👵</span>
+        <div>
+          <div class="text-[10px] font-mono-code uppercase font-bold text-rose-700">${title}</div>
+          <p class="text-xs text-zinc-800 font-semibold mt-0.5">${msg}</p>
+        </div>
+      `;
+      document.body.appendChild(toast);
+      setTimeout(() => toast.remove(), 4200);
     }
 
-    // Group Matchmaker Algorithm
-    let activeMatchFilters = null;
-
-    function openMatchmakerModal() {
-      document.getElementById('matchmakerModal').classList.remove('hidden');
-    }
-
-    function closeMatchmakerModal() {
-      document.getElementById('matchmakerModal').classList.add('hidden');
-    }
-
-    function updateAmbienceLabel(val) {
-      const v = parseFloat(val);
-      const text = v <= 6.5 ? `${v}+ (Street vibe ok)` : v <= 7.8 ? `${v}+ (Family clean)` : `${v}+ (AC Luxury)`;
-      document.getElementById('prefAmbienceDisplay').innerText = text;
-    }
-
-    function calculateSecretMatch(e) {
-      e.preventDefault();
-      const minTaste = parseFloat(document.getElementById('prefTaste').value);
-      const minAmbience = parseFloat(document.getElementById('prefAmbience').value);
-      const maxPrice = parseInt(document.getElementById('prefPrice').value);
-      const vehicle = document.querySelector('input[name="vehicle"]:checked').value;
-
-      activeMatchFilters = { minTaste, minAmbience, maxPrice, vehicle };
-
-      // Calculate compatibility score for all spots
-      spots.forEach(s => {
-        let score = 100;
-        if (s.taste < minTaste) score -= (minTaste - s.taste) * 18;
-        if (s.ambience < minAmbience) score -= (minAmbience - s.ambience) * 12;
-        if (s.price > maxPrice) score -= ((s.price - maxPrice) / 10) * 5;
-        if (vehicle === 'car' && s.parkingScore < 6.0) score -= 25;
-        s.matchScore = Math.max(20, Math.min(99, Math.round(score)));
-      });
-
-      // Sort by match score
-      spots.sort((a, b) => (b.matchScore || 0) - (a.matchScore || 0));
-
-      closeMatchmakerModal();
-      renderSpots();
-
-      confetti({ particleCount: 120, spread: 85, origin: { y: 0.6 } });
-      triggerSlangAlert({
-        icon: "🎯",
-        badge: "SECRET MATCH REVEALED",
-        msg: `Group preferences batti best matching addas list chesam! Top match: ${spots[0].name} (${spots[0].matchScore}% Match)!`
-      });
-
-      document.getElementById('spotsGrid').scrollIntoView({ behavior: 'smooth' });
-    }
-
-    // Share Modal Handlers
-    function openShareModal() {
-      const currentUrl = window.location.href.split('#')[0];
-      const winner = spots.slice().sort((a, b) => b.votes - a.votes)[0];
-      const text = encodeURIComponent(`Miya, mana Hyderabadi Biryani spot voting nadustundi! Current #1 is ${winner ? winner.name : 'Hotel Rumaan'}. Open link and vote your spot: ${currentUrl}`);
-      
-      document.getElementById('shareUrlInput').value = currentUrl;
-      document.getElementById('whatsappShareBtn').href = `https://api.whatsapp.com/send?text=${text}`;
-      document.getElementById('shareModal').classList.remove('hidden');
-    }
-
-    function closeShareModal() {
-      document.getElementById('shareModal').classList.add('hidden');
-    }
-
-    function copyShareLink() {
-      const url = document.getElementById('shareUrlInput').value;
-      navigator.clipboard.writeText(url).then(() => {
-        const btn = document.getElementById('copyBtn');
-        btn.innerText = "Copied! ✓";
-        btn.classList.add('bg-emerald-600');
-        setTimeout(() => {
-          btn.innerText = "Copy";
-          btn.classList.remove('bg-emerald-600');
-        }, 2000);
-      });
-      triggerSlangAlert({
-        icon: "🔗",
-        badge: "LINK COPIED",
-        msg: "Share link copy aindi! Friends group lo paste chesi voting pettandi!"
-      });
-    }
-
-    // Init with LocalStorage persistence
-    function saveSpotsToStorage() {
-      try {
-        localStorage.setItem('dumverdict_spots', JSON.stringify(spots));
-      } catch (e) {}
-    }
-
-    function loadSpotsFromStorage() {
-      try {
-        const saved = localStorage.getItem('dumverdict_spots');
-        if (saved) {
-          spots = JSON.parse(saved);
-        }
-      } catch (e) {}
-    }
-
-    loadSpotsFromStorage();
-    renderSpots();
+    // Init
+    renderTasks();
+    renderBlockedSites();
+    updateMomMood();
   </script>
 </body>
 </html>
