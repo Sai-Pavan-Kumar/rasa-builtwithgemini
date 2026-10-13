@@ -112,20 +112,85 @@
       </div>
 
       <div class="flex items-center gap-2">
+        <button onclick="openMatchmakerModal()" class="text-xs px-3.5 py-1.5 rounded-full bg-gradient-to-r from-amber-600 to-[#C85A17] hover:from-amber-700 hover:to-[#B34F12] text-white font-bold transition flex items-center gap-1.5 shadow-sm active:scale-95">
+          <span>🎯</span>
+          <span>Match Group Adda</span>
+        </button>
         <button onclick="openShareModal()" class="text-xs px-3.5 py-1.5 rounded-full bg-[#1C1917] hover:bg-[#2E2825] text-white font-semibold transition flex items-center gap-1.5 shadow-sm active:scale-95">
           <span>🔗</span>
-          <span>Share Poll Link</span>
+          <span>Share</span>
         </button>
         <button onclick="triggerSlangAlert()" class="text-xs px-3 py-1.5 rounded-full bg-red-50 border border-red-200/80 text-red-700 font-semibold hover:bg-red-100 transition flex items-center gap-1.5">
           <span>⚠️</span>
           <span>Street Alert</span>
         </button>
-        <a href="#nominateSection" class="text-xs px-3.5 py-1.5 rounded-full bg-[#C85A17] hover:bg-[#B34F12] text-white font-bold transition shadow-sm flex items-center gap-1">
-          <span>+</span> Nominate Adda
-        </a>
       </div>
     </div>
   </header>
+
+  <!-- SECRET GROUP PREFERENCE MATCHMAKER MODAL (APPLE-GRADE SLICK DRAWER) -->
+  <div id="matchmakerModal" class="fixed inset-0 bg-black/45 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl p-6 sm:p-7 max-w-md w-full shadow-2xl border border-black/5 relative transform transition-all max-h-[92vh] overflow-y-auto">
+      <div class="flex items-center justify-between pb-3.5 border-b border-zinc-100 mb-4">
+        <div>
+          <span class="text-[10px] font-mono-code uppercase font-bold text-[#C85A17] tracking-wider">Secret Group Algorithm</span>
+          <h3 class="font-serif-title text-xl font-bold text-zinc-900 mt-0.5">Group Vibe Matcher 🎯</h3>
+          <p class="text-xs text-zinc-500">Scores & budget set cheyyi, matching secret addas reveal aithayi</p>
+        </div>
+        <button onclick="closeMatchmakerModal()" class="w-8 h-8 rounded-full bg-zinc-100 text-zinc-600 hover:text-black flex items-center justify-center font-bold text-sm">✕</button>
+      </div>
+
+      <form onsubmit="calculateSecretMatch(event)" class="space-y-4 text-xs">
+        <!-- Criterion 1: Taste Minimum -->
+        <div class="bg-zinc-50 p-3.5 rounded-2xl border border-zinc-200/70">
+          <div class="flex justify-between items-center mb-1.5">
+            <span class="font-bold text-zinc-800">🍗 Minimum Taste / Dhum Score</span>
+            <span id="prefTasteDisplay" class="font-mono-code font-bold text-[#C85A17]">8.5+ / 10</span>
+          </div>
+          <input type="range" min="7" max="9.8" step="0.1" value="8.5" id="prefTaste" oninput="document.getElementById('prefTasteDisplay').innerText = this.value + '+ / 10'" class="w-full accent-[#C85A17]">
+          <p class="text-[10px] text-zinc-400 mt-1">8.5+ ante hardcore authentic biryani lovers matrame!</p>
+        </div>
+
+        <!-- Criterion 2: Ambience Minimum -->
+        <div class="bg-zinc-50 p-3.5 rounded-2xl border border-zinc-200/70">
+          <div class="flex justify-between items-center mb-1.5">
+            <span class="font-bold text-zinc-800">🪑 Ambience Expectation</span>
+            <span id="prefAmbienceDisplay" class="font-mono-code font-bold text-zinc-700">6.0+ (Street ok)</span>
+          </div>
+          <input type="range" min="5" max="9" step="0.5" value="6.0" id="prefAmbience" oninput="updateAmbienceLabel(this.value)" class="w-full accent-[#C85A17]">
+          <p class="text-[10px] text-zinc-400 mt-1" id="ambienceSubtext">Gully street adda ayna parvaleda leka AC seating kavala?</p>
+        </div>
+
+        <!-- Criterion 3: Max Budget per person -->
+        <div class="bg-zinc-50 p-3.5 rounded-2xl border border-zinc-200/70">
+          <div class="flex justify-between items-center mb-1.5">
+            <span class="font-bold text-zinc-800">💸 Max Budget per Person</span>
+            <span id="prefPriceDisplay" class="font-mono-code font-bold text-emerald-700">₹300 /-</span>
+          </div>
+          <input type="range" min="200" max="400" step="25" value="300" id="prefPrice" oninput="document.getElementById('prefPriceDisplay').innerText = '₹' + this.value + ' / -'" class="w-full accent-[#C85A17]">
+        </div>
+
+        <!-- Criterion 4: Vehicle & Parking Priority -->
+        <div class="bg-zinc-50 p-3.5 rounded-2xl border border-zinc-200/70">
+          <label class="block font-bold text-zinc-800 mb-1.5">🚗 Car lo velthunnara or Bike?</label>
+          <div class="grid grid-cols-2 gap-2">
+            <label class="flex items-center gap-2 p-2 rounded-xl bg-white border border-zinc-200 cursor-pointer text-xs font-semibold">
+              <input type="radio" name="vehicle" value="bike" checked class="accent-[#C85A17]">
+              <span>🏍️ Bike / Metro (Flexible)</span>
+            </label>
+            <label class="flex items-center gap-2 p-2 rounded-xl bg-white border border-zinc-200 cursor-pointer text-xs font-semibold">
+              <input type="radio" name="vehicle" value="car" class="accent-[#C85A17]">
+              <span>🚗 Car (Valet Must)</span>
+            </label>
+          </div>
+        </div>
+
+        <button type="submit" class="w-full py-3 rounded-2xl bg-[#C85A17] hover:bg-[#B34F12] text-white font-bold text-xs tracking-wide shadow-md transition active:scale-95 flex items-center justify-center gap-2">
+          <span>✨</span> Reveal Secret Matching Addas
+        </button>
+      </form>
+    </div>
+  </div>
 
   <!-- APPLE-LEVEL SHARE MODAL -->
   <div id="shareModal" class="fixed inset-0 bg-black/40 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
@@ -666,6 +731,10 @@
                     <span class="text-[10px] uppercase font-bold text-[#C85A17] bg-[#FFF2E5] border border-[#FCDCC0] px-2 py-0.5 rounded-full">
                       ${s.badge}
                     </span>
+                    ${s.matchScore ? `
+                    <span class="text-[10px] font-mono-code font-bold text-emerald-800 bg-emerald-100 border border-emerald-300 px-2 py-0.5 rounded-full animate-pulse">
+                      ✨ ${s.matchScore}% Group Match
+                    </span>` : ''}
                   </div>
                   <h3 class="font-serif-title text-xl font-bold text-[#231F20] mt-1.5">${s.name}</h3>
                   <div class="text-xs font-semibold text-[#786C5E] mt-0.5 flex items-center gap-2">
@@ -809,6 +878,58 @@
         badge: "POLL RESET",
         msg: "Event floor voting zero chesam. Kothaga votes veyyandi ustaad!"
       });
+    }
+
+    // Group Matchmaker Algorithm
+    let activeMatchFilters = null;
+
+    function openMatchmakerModal() {
+      document.getElementById('matchmakerModal').classList.remove('hidden');
+    }
+
+    function closeMatchmakerModal() {
+      document.getElementById('matchmakerModal').classList.add('hidden');
+    }
+
+    function updateAmbienceLabel(val) {
+      const v = parseFloat(val);
+      const text = v <= 6.5 ? `${v}+ (Street vibe ok)` : v <= 7.8 ? `${v}+ (Family clean)` : `${v}+ (AC Luxury)`;
+      document.getElementById('prefAmbienceDisplay').innerText = text;
+    }
+
+    function calculateSecretMatch(e) {
+      e.preventDefault();
+      const minTaste = parseFloat(document.getElementById('prefTaste').value);
+      const minAmbience = parseFloat(document.getElementById('prefAmbience').value);
+      const maxPrice = parseInt(document.getElementById('prefPrice').value);
+      const vehicle = document.querySelector('input[name="vehicle"]:checked').value;
+
+      activeMatchFilters = { minTaste, minAmbience, maxPrice, vehicle };
+
+      // Calculate compatibility score for all spots
+      spots.forEach(s => {
+        let score = 100;
+        if (s.taste < minTaste) score -= (minTaste - s.taste) * 18;
+        if (s.ambience < minAmbience) score -= (minAmbience - s.ambience) * 12;
+        if (s.price > maxPrice) score -= ((s.price - maxPrice) / 10) * 5;
+        if (vehicle === 'car' && s.parkingScore < 6.0) score -= 25;
+        s.matchScore = Math.max(20, Math.min(99, Math.round(score)));
+      });
+
+      // Sort by match score
+      spots.sort((a, b) => (b.matchScore || 0) - (a.matchScore || 0));
+
+      closeMatchmakerModal();
+      renderSpots();
+
+      confetti({ particleCount: 120, spread: 85, origin: { y: 0.6 } });
+      triggerSlangAlert({
+        icon: "🎯",
+        badge: "SECRET MATCH REVEALED",
+        msg: `Group preferences batti best matching addas list chesam! Top match: ${spots[0].name} (${spots[0].matchScore}% Match)!`
+      });
+
+      document.getElementById('spotsGrid').scrollIntoView({ behavior: 'smooth' });
     }
 
     // Share Modal Handlers
