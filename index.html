@@ -143,23 +143,39 @@
         <button onclick="closeFightModal()" class="w-7 h-7 rounded-full bg-zinc-100 text-zinc-600 hover:text-black font-bold text-xs">✕</button>
       </div>
 
-      <p class="text-xs text-zinc-500 mb-4">
-        Group lo iddariki godava aithunda? Toss veyyi, evadu gelisthe vallu cheppe adda ke vellali!
+      <p class="text-xs text-zinc-500 mb-3">
+        Evari madhyana fight jarugutundo aa rendu addas select cheyyandi:
       </p>
 
-      <div class="py-4">
-        <div id="tossCoin" class="w-24 h-24 mx-auto rounded-full bg-gradient-to-tr from-[#C85A17] to-amber-400 border-4 border-amber-200 flex items-center justify-center text-4xl shadow-xl transition-all duration-700 transform">
-          🍗
+      <!-- Spot Rivalry Selector -->
+      <div class="space-y-2 mb-3 text-left">
+        <div>
+          <label class="text-[10px] font-bold text-zinc-600 uppercase font-mono-code">Friend 1 Adda (Heads 🍗):</label>
+          <select id="tossSpotA" class="w-full bg-zinc-50 border border-zinc-200 rounded-xl px-2.5 py-1.5 text-xs text-zinc-800 font-semibold focus:outline-none focus:border-[#C85A17]">
+          </select>
+        </div>
+        <div class="text-center font-bold text-red-500 text-xs py-0.5">⚡ VS ⚡</div>
+        <div>
+          <label class="text-[10px] font-bold text-zinc-600 uppercase font-mono-code">Friend 2 Adda (Tails 🍚):</label>
+          <select id="tossSpotB" class="w-full bg-zinc-50 border border-zinc-200 rounded-xl px-2.5 py-1.5 text-xs text-zinc-800 font-semibold focus:outline-none focus:border-[#C85A17]">
+          </select>
         </div>
       </div>
 
-      <div id="tossResult" class="min-h-[50px] flex items-center justify-center text-xs font-bold text-zinc-800 px-3">
-        "Toss cheyadaniki kinda button nokkandi ustaad!"
+      <div class="py-2">
+        <div id="tossCoin" class="w-20 h-20 mx-auto rounded-full bg-gradient-to-tr from-[#C85A17] to-amber-400 border-4 border-amber-200 flex flex-col items-center justify-center shadow-xl transition-all duration-700 transform">
+          <span id="coinEmoji" class="text-2xl">🍗</span>
+          <span id="coinLabel" class="text-[9px] font-bold text-white uppercase tracking-tight">HEADS</span>
+        </div>
       </div>
 
-      <div class="mt-4 flex gap-2">
-        <button onclick="spinHandiToss()" id="tossActionBtn" class="w-full py-3 rounded-2xl bg-zinc-950 hover:bg-zinc-800 text-white font-bold text-xs tracking-wide shadow-md transition active:scale-95 flex items-center justify-center gap-2">
-          <span>🎲</span> Flip the Dum Coin!
+      <div id="tossResult" class="min-h-[46px] flex items-center justify-center text-xs font-bold text-zinc-800 px-2 my-1">
+        "Toss button nokkandi, true 50-50 verdict osthadi!"
+      </div>
+
+      <div class="mt-3 flex gap-2">
+        <button onclick="spinHandiToss()" id="tossActionBtn" class="w-full py-2.5 rounded-2xl bg-zinc-950 hover:bg-zinc-800 text-white font-bold text-xs tracking-wide shadow-md transition active:scale-95 flex items-center justify-center gap-2">
+          <span>🎲</span> Flip Coin (50/50 Settle)
         </button>
       </div>
     </div>
@@ -924,6 +940,15 @@
 
     // UNIQUE FEATURE 1: Argument Killer Toss
     function openFightModal() {
+      const selectA = document.getElementById('tossSpotA');
+      const selectB = document.getElementById('tossSpotB');
+
+      if (selectA && selectB) {
+        selectA.innerHTML = spots.map((s, idx) => `<option value="${s.id}" ${idx === 0 ? 'selected' : ''}>${s.name} (${s.area})</option>`).join('');
+        selectB.innerHTML = spots.map((s, idx) => `<option value="${s.id}" ${idx === 1 ? 'selected' : ''}>${s.name} (${s.area})</option>`).join('');
+      }
+
+      document.getElementById('tossResult').innerText = "Toss button nokkandi, true 50-50 verdict osthadi!";
       document.getElementById('fightModal').classList.remove('hidden');
     }
 
@@ -935,36 +960,60 @@
       const coin = document.getElementById('tossCoin');
       const res = document.getElementById('tossResult');
       const btn = document.getElementById('tossActionBtn');
+      const emoji = document.getElementById('coinEmoji');
+      const label = document.getElementById('coinLabel');
+
+      const spotAId = parseInt(document.getElementById('tossSpotA').value);
+      const spotBId = parseInt(document.getElementById('tossSpotB').value);
+
+      const spotA = spots.find(s => s.id === spotAId) || spots[0];
+      const spotB = spots.find(s => s.id === spotBId) || spots[1] || spots[0];
+
+      if (spotA.id === spotB.id) {
+        res.innerHTML = `<span class="text-amber-700">Miya! Rendu addas okkate pettaru! Iddaru vere vere spots pettandi.</span>`;
+        return;
+      }
 
       btn.disabled = true;
       btn.innerText = "Tossing in the air...";
-      coin.style.transform = "rotateY(1440deg) scale(1.15)";
+      coin.style.transform = "rotateY(1800deg) scale(1.15)";
       res.innerText = "Dum Handi toss avthundi...";
 
-      setTimeout(() => {
-        const topTwo = spots.slice(0, 2);
-        const winner = Math.random() > 0.5 ? topTwo[0] : (topTwo[1] || topTwo[0]);
-        const loser = winner.id === topTwo[0]?.id ? (topTwo[1] || topTwo[0]) : topTwo[0];
+      // True 50-50 flip using cryptographic random
+      const cryptoRandom = window.crypto ? window.crypto.getRandomValues(new Uint32Array(1))[0] / 4294967296 : Math.random();
+      const isHeads = cryptoRandom < 0.5;
 
-        coin.style.transform = "rotateY(0deg) scale(1)";
+      const winner = isHeads ? spotA : spotB;
+      const loser = isHeads ? spotB : spotA;
+
+      setTimeout(() => {
+        coin.style.transform = isHeads ? "rotateY(0deg) scale(1)" : "rotateY(180deg) scale(1)";
+        emoji.innerText = isHeads ? "🍗" : "🍚";
+        label.innerText = isHeads ? "HEADS" : "TAILS";
+
+        // Give winning spot +1 live vote
+        winner.votes += 1;
+        saveSpotsToStorage();
+        renderSpots();
+
         res.innerHTML = `
           <div class="space-y-1">
-            <span class="text-emerald-700 font-extrabold text-sm block">👑 ${winner.name} Gelichindi!</span>
+            <span class="text-emerald-700 font-extrabold text-sm block">👑 ${winner.name} (${isHeads ? 'Heads' : 'Tails'}) Gelichindi!</span>
             <span class="text-[11px] text-zinc-600 font-medium block">
-              Opponent group silent aipondi! ${loser ? loser.name : 'Vere vallu'} vote vesina vallu direct ga bill kattalsinde!
+              ${loser.name} party vallu silent aipondi! ${winner.name} locked and +1 vote added!
             </span>
           </div>
         `;
 
         btn.disabled = false;
         btn.innerText = "Toss Again 🎲";
-        confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+        confetti({ particleCount: 90, spread: 75, origin: { y: 0.6 } });
         triggerSlangAlert({
-          icon: "🪙",
-          badge: "TOSS VERDICT",
-          msg: `Toss Verdict: Final ga ${winner.name} locked! No more arguments in group!`
+          icon: isHeads ? "🍗" : "🍚",
+          badge: "TOSS VERDICT LOCKED",
+          msg: `Toss Gelichindi: ${winner.name}! Sab log gaadi theeyandi, bill ${loser.name} supporter kattali!`
         });
-      }, 1200);
+      }, 1000);
     }
 
     // UNIQUE FEATURE 2: Friend Convincer Slang Excuse Generator
